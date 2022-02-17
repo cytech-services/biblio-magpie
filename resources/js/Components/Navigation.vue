@@ -1,7 +1,7 @@
 <template>
 	<Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
 		<div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex items-center justify-between h-16">
+			<div class="flex items-center justify-between h-14">
 				<div class="flex items-center">
 					<div class="flex-shrink-0">
 						<img
@@ -163,11 +163,11 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import Notifications from '@/Components/Panels/Notifications.vue'
 
 const navigation = [
-	{ name: 'Dashboard', href: '#', current: true },
-	{ name: 'Team', href: '#', current: false },
-	{ name: 'Projects', href: '#', current: false },
-	{ name: 'Calendar', href: '#', current: false },
-	{ name: 'Reports', href: '#', current: false },
+	{ name: 'Library', href: '#', current: true },
+	{ name: 'Authors', href: '#', current: false },
+	{ name: 'Series', href: '#', current: false },
+	{ name: 'Settings', href: '#', current: false },
+	{ name: 'Share', href: '#', current: false },
 ]
 const userNavigation = [
 	{ name: 'Your Profile', href: '#' },
