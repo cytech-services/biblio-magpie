@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LibraryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,14 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::inertia('/', 'Index')->name('index');
+Route::redirect('/', '/library');
 
-Route::controller(DashboardController::class)->group(function () {
-    Route::get('/dashboard', 'dashboard')->name('dashboard');
+// Route::inertia('/', 'Index')->name('index');
+
+Route::controller(LibraryController::class)->group(function () {
+    Route::get('/library', 'index')->name('library.index');
 });
-
-// Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });

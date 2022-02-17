@@ -1,5 +1,5 @@
 <template>
-	<default-layout title="Dashboard">
+	<default-layout title="Library">
 		<div class="w-full mx-auto py-6 sm:px-6 lg:px-8">
 			<!-- Replace with your content -->
 			<div class="px-4 py-4 sm:px-0">
