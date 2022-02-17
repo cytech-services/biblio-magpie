@@ -1,18 +1,10 @@
 <template>
 	<div class="min-h-full">
+		<Head :title="headTitle" />
 		<navigation :user="user" />
 
-		<div>
-			<Head :title="headTitle" />
-
-			<header class="bg-white shadow-sm">
-				<div class="w-full mx-auto py-4 px-4 sm:px-6 lg:px-8">
-					<h1 class="text-lg leading-6 font-semibold text-gray-900">{{ title }}</h1>
-				</div>
-			</header>
-			<main>
-				<slot />
-			</main>
+		<div class="min-h-full">
+			<slot />
 		</div>
 	</div>
 </template>
