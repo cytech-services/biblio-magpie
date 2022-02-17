@@ -4,6 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
         @production
             @php
                 $manifest = json_decode(file_get_contents(public_path('dist/manifest.json')), true);
