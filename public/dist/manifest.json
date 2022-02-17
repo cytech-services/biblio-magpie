@@ -1,0 +1,16 @@
+{
+  "resources/js/app.ts": {
+    "file": "assets/app.ae5eeda2.js",
+    "src": "resources/js/app.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.739d320c.js"
+    ],
+    "css": [
+      "assets/app.6039c259.css"
+    ]
+  },
+  "_vendor.739d320c.js": {
+    "file": "assets/vendor.739d320c.js"
+  }
+}

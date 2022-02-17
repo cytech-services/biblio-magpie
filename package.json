@@ -1,18 +1,48 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
-    },
-    "devDependencies": {
-        "axios": "^0.25",
-        "laravel-mix": "^6.0.6",
-        "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
-    }
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.2.0",
+    "@vue/compiler-sfc": "^3.2.31",
+    "autoprefixer": "^10.4.2",
+    "axios": "^0.25",
+    "dotenv": "^16.0.0",
+    "lodash": "^4.17.19",
+    "postcss": "^8.4.6",
+    "tailwindcss": "^3.0.23",
+    "vite": "^2.8.3",
+    "vue": "^3.2.31"
+  },
+  "dependencies": {
+    "@inertiajs/inertia": "^0.11.0",
+    "@inertiajs/inertia-vue3": "^0.6.0",
+    "@inertiajs/progress": "^0.2.7",
+    "@vuedx/typescript-plugin-vue": "^0.7.4",
+    "typescript": "^4.5.5",
+    "vue-toastification": "^1.7.14"
+  },
+  "name": "biblio-magpie",
+  "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
+  "version": "0.1.0",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cytech-services/biblio-magpie.git"
+  },
+  "keywords": [
+    "ebook",
+    "library"
+  ],
+  "author": "Christopher Graham",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/cytech-services/biblio-magpie/issues"
+  },
+  "homepage": "https://github.com/cytech-services/biblio-magpie#readme"
 }
