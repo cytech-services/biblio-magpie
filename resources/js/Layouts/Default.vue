@@ -3,7 +3,7 @@
 		<navigation :user="user" />
 
 		<div>
-			<Head :title="title" />
+			<Head :title="headTitle" />
 
 			<header class="bg-white shadow-sm">
 				<div class="w-full mx-auto py-4 px-4 sm:px-6 lg:px-8">
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { Head } from '@inertiajs/inertia-vue3'
 import Navigation from '@/Components/Navigation.vue'
 
 const user = {
@@ -29,6 +31,7 @@ const user = {
 
 export default {
 	components: {
+		Head,
 		Navigation,
 	},
 	props: {
@@ -37,9 +40,14 @@ export default {
 			default: 'Test',
 		},
 	},
-	setup() {
+	setup(props) {
+		const headTitle = computed(() => {
+			return props.title + ' - Biblio Magpie'
+		})
+
 		return {
 			user,
+			headTitle,
 		}
 	},
 }

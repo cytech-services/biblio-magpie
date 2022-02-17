@@ -160,7 +160,6 @@ import {
 	MenuItems,
 } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-import { Head } from '@inertiajs/inertia-vue3'
 import Notifications from '@/Components/Panels/Notifications.vue'
 
 const navigation = [
@@ -178,7 +177,6 @@ const userNavigation = [
 
 export default {
 	components: {
-		Head,
 		Disclosure,
 		DisclosureButton,
 		DisclosurePanel,
