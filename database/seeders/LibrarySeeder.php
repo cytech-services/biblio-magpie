@@ -15,7 +15,7 @@ class LibrarySeeder extends Seeder
     public function run()
     {
         Library::factory(2)
-            ->hasBooks(100)
+            ->hasBooks(500)
             ->create();
     }
 }
