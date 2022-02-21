@@ -11,11 +11,12 @@
 						:pagination="true"
 						paginationPageSize="15"
 						:columnDefs="columnDefs"
-						@grid-ready="onGridReady"
 						:defaultColDef="defaultColDef"
 						:sideBar="sideBar"
 						:rowData="rowData"
 						rowSelection="multiple"
+						@grid-ready="onGridReady"
+						@row-selected="onRowSelected"
 					></ag-grid-vue>
 				</div>
 
@@ -110,6 +111,11 @@ export default {
 			console.log(`Selected nodes: ${selectedDataStringPresentation}`)
 		}
 
+		const onRowSelected = (event) => {
+			if (event.node.isSelected())
+				console.log('row ' + event.node.data.title, event.node.data)
+		}
+
 		return {
 			columnDefs: [
 				{
@@ -140,6 +146,7 @@ export default {
 			rowData,
 			onGridReady,
 			getSelectedRows,
+			onRowSelected,
 		}
 	},
 }
