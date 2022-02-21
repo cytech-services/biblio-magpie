@@ -5,7 +5,7 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.2.0",
+    "@vitejs/plugin-vue": "^2.2.2",
     "@vue/compiler-sfc": "^3.2.31",
     "autoprefixer": "^10.4.2",
     "axios": "^0.25",
@@ -13,11 +13,11 @@
     "lodash": "^4.17.19",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.23",
-    "vite": "^2.8.3",
+    "vite": "^2.8.4",
     "vue": "^3.2.31"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.4.3",
+    "@headlessui/vue": "^1.5.0",
     "@heroicons/vue": "^1.0.5",
     "@inertiajs/inertia": "^0.11.0",
     "@inertiajs/inertia-vue3": "^0.6.0",
