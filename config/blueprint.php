@@ -72,7 +72,7 @@ return [
 
     'on_delete' => 'cascade',
 
-    'on_update' => 'no_action',
+    'on_update' => 'restrict',
 
     /*
     |--------------------------------------------------------------------------
