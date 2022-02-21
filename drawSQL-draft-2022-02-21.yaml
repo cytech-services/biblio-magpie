@@ -1,0 +1,93 @@
+models:
+    Library:
+        id: integer primary
+        name: string
+    Book:
+        id: integer primary
+        library_id: integer
+        title: string
+        sub_title: integer
+        author_id: integer
+        description: text
+        edition: string
+        language: integer
+        page_count: integer
+        publisher_id: integer
+        rating: smallInteger
+        publish_date: timestamp
+    Author:
+        id: integer primary
+        name: integer
+    Series:
+        id: integer primary
+        name: integer
+    BookSeries:
+        id: false
+        series_id: integer
+        book_id: integer
+        oder: smallInteger
+    Medium:
+        id: integer primary
+        book_id: integer
+        format_id: integer
+        location: text
+        read_by: string nullable
+    Format:
+        id: integer primary
+        name: integer
+    Publisher:
+        id: integer primary
+        name: string
+    Genre:
+        id: integer primary
+        name: string
+    Tag:
+        id: integer primary
+        name: integer
+    BookGenre:
+        id: false
+        book_id: integer
+        genre_id: integer
+    BookTag:
+        id: false
+        book_id: integer
+        tag_id: integer
+    AuthorBook:
+        id: false
+        author_id: integer
+        book_id: integer
+    ReadHistory:
+        id: integer primary
+        user_id: integer
+        book_id: integer
+        status: enum
+        progress: text nullable
+    Identification:
+        id: integer primary
+        book_id: integer
+        identification_type_id: integer
+        value: string
+    Role:
+        id: integer primary
+        name: integer
+    RoleUser:
+        id: false
+        role_id: integer
+        user_id: integer
+    Userable:
+        id: false
+        user_id: integer
+        userable_id: integer
+        userable_type: text
+    IdentificationType:
+        id: integer primary
+        name: integer
+    SiteSetting:
+        id: integer primary
+        name: string
+        value: string
+    UserSetting:
+        id: integer primary
+        user_id: integer
+        name: string
+        value: string
