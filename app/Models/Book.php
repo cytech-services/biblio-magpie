@@ -36,7 +36,6 @@ class Book extends Model
     protected $casts = [
         'id' => 'integer',
         'rating' => 'integer',
-        'publish_date' => 'timestamp',
     ];
 
     public function media()
