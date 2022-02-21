@@ -14,6 +14,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\Author::factory(30)->create();
+        \App\Models\Category::factory(15)->create();
+        \App\Models\Format::factory(3)->create();
+        \App\Models\IdentificationType::factory(20)->create();
+        \App\Models\Publisher::factory(20)->create();
+        \App\Models\Series::factory(10)->create();
+
+        $this->call([
+            LibrarySeeder::class,
+        ]);
     }
 }
