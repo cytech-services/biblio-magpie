@@ -68,11 +68,11 @@ return [
     | by defining your `foreign` key column with an `onDelete`.
     |
     */
-    'use_constraints' => false,
+    'use_constraints' => true,
 
     'on_delete' => 'cascade',
 
-    'on_update' => 'cascade',
+    'on_update' => 'no_action',
 
     /*
     |--------------------------------------------------------------------------
