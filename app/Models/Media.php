@@ -17,7 +17,7 @@ class Media extends Model
      */
     protected $fillable = [
         'book_id',
-        'format_id',
+        'file_format_id',
         'path',
         'size',
     ];
@@ -36,8 +36,8 @@ class Media extends Model
         return $this->belongsTo(Book::class);
     }
 
-    public function format()
+    public function file_format()
     {
-        return $this->belongsTo(Format::class);
+        return $this->belongsTo(FileFormat::class);
     }
 }

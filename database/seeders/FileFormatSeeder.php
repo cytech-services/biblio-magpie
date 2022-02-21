@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Format;
+use App\Models\FileFormat;
 use Illuminate\Database\Seeder;
 
-class FormatSeeder extends Seeder
+class FileFormatSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class FormatSeeder extends Seeder
      */
     public function run()
     {
-        Format::factory()->create();
+        FileFormat::factory()->create();
     }
 }

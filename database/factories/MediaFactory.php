@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Book;
-use App\Models\Format;
+use App\Models\FileFormat;
 use App\Models\Media;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,8 +27,8 @@ class MediaFactory extends Factory
     {
         return [
             'book_id' => Book::factory(),
-            'format_id' => function (array $attributes) {
-                return Format::inRandomOrder()->first()->id;
+            'file_format_id' => function (array $attributes) {
+                return FileFormat::inRandomOrder()->first()->id;
             },
             'path' => $this->faker->file('/tmp', '/' . storage_path('app/public'), false),
             'size' => function (array $attributes) {

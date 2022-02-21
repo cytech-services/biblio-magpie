@@ -15,7 +15,7 @@ class MediaSeeder extends Seeder
     public function run()
     {
         Media::factory()
-            ->hasFormat(1)
+            ->hasFileFormat(1)
             ->create();
     }
 }

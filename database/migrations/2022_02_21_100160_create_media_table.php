@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Book;
-use App\Models\Format;
+use App\Models\FileFormat;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +20,7 @@ class CreateMediaTable extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Book::class)->index()->constrained();
-            $table->foreignIdFor(Format::class)->index()->constrained();
+            $table->foreignIdFor(FileFormat::class)->index()->constrained();
             $table->text('path');
             $table->unsignedInteger('size');
             $table->softDeletes();

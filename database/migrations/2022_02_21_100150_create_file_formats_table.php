@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormatsTable extends Migration
+class CreateFileFormatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class CreateFormatsTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('formats', function (Blueprint $table) {
+        Schema::create('file_formats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->softDeletes();
