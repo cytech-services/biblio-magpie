@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BookResource;
+use App\Http\Resources\Tables\BookResource;
 use App\Models\Book;
 use App\Models\Library;
 use Illuminate\Http\Request;
