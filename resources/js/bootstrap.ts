@@ -32,3 +32,33 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 //     forceTLS: true,
 //     enabledTransports: ['ws', 'wss'],
 // })
+
+window.createServerSideDatasource = function createServerSideDatasource(server) {
+	return {
+		getRows: function (params) {
+			console.log('[Datasource] - rows requested by grid: ', params.request)
+			// get data for request from our fake server
+			var response = server.getData(params.request)
+
+			if (response.success) {
+				// supply rows for requested block to grid
+				params.success({ rowData: response.rows })
+			} else {
+				params.fail()
+			}
+		},
+	}
+}
+
+window.createFakeServer = function createFakeServer(allData) {
+	return {
+		getData: function (request) {
+			// take a copy of the data to return to the client
+			var requestedRows = allData.slice()
+			return {
+				success: true,
+				rows: requestedRows,
+			}
+		},
+	}
+}

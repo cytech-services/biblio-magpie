@@ -7,6 +7,9 @@
 				<div class="px-4 py-4 sm:px-0">
 					<ag-grid-vue
 						class="w-full h-[70vh] ag-theme-alpine"
+						rowModelType="serverSide"
+						:pagination="true"
+						paginationPageSize="15"
 						:columnDefs="columnDefs"
 						@grid-ready="onGridReady"
 						:defaultColDef="defaultColDef"
@@ -82,13 +85,18 @@ export default {
 		const onGridReady = (params) => {
 			gridApi = params.api
 			columnApi = params.columnApi
-
-			gridApi = params.api
 			gridColumnApi = params.columnApi
 
-			const updateData = (data) => params.api.setRowData(data)
+			const updateData = (data) => {
+				// setup the fake server with entire dataset
+				var fakeServer = createFakeServer(data)
+				// create datasource with a reference to the fake server
+				var datasource = createServerSideDatasource(fakeServer)
+				// register the datasource with the grid
+				params.api.setServerSideDatasource(datasource)
+			}
 
-			fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
+			fetch('/api/library/fetch_books')
 				.then((resp) => resp.json())
 				.then((data) => updateData(data))
 		}
@@ -105,19 +113,22 @@ export default {
 		return {
 			columnDefs: [
 				{
-					field: 'athlete',
+					field: 'library',
 					minWidth: 200,
 					filter: 'agTextColumnFilter',
 					checkboxSelection: true,
 				},
-				{ field: 'age' },
-				{ field: 'country', minWidth: 200 },
-				{ field: 'year' },
-				{ field: 'date', minWidth: 180 },
-				{ field: 'gold', filter: false },
-				{ field: 'silver', filter: false },
-				{ field: 'bronze', filter: false },
-				{ field: 'total', filter: false },
+				{ field: 'title' },
+				{ field: 'sub_title', minWidth: 200 },
+				{ field: 'authors', minWidth: 200 },
+				{ field: 'size_on_disk', maxWidth: 130 },
+				{ field: 'rating', maxWidth: 130, filter: false },
+				{ field: 'categories', filter: false },
+				{ field: 'series', filter: false },
+				{ field: 'publisher', filter: false },
+				{ field: 'publish_date', maxWidth: 130 },
+				{ field: 'language', maxWidth: 120 },
+				{ field: 'formats' },
 			],
 			defaultColDef: {
 				flex: 1,
