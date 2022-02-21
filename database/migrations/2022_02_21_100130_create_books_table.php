@@ -29,7 +29,7 @@ class CreateBooksTable extends Migration
             $table->unsignedInteger('page_count');
             $table->foreignIdFor(Publisher::class)->index()->constrained();
             $table->unsignedSmallInteger('rating');
-            $table->timestamp('publish_date');
+            $table->date('publish_date');
             $table->softDeletes();
             $table->timestamps();
         });
