@@ -35,10 +35,22 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'import' => [
+            'driver' => 'local',
+            'root' => storage_path('app/import'),
+        ],
+
+        'books' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/books'),
+            'url' => env('APP_URL') . '/storage/books',
+            'visibility' => 'public',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
 
