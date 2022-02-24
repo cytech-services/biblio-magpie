@@ -4,15 +4,15 @@
 
 		<main class="min-h-full">
 			<div class="w-full h-full mx-auto py-6 sm:px-6 lg:px-8">
-				<div class="px-4 py-4 sm:px-0">
+				<div class="px-4 py-4 sm:px-0 library">
 					<ag-grid-vue
 						class="w-full h-[70vh] ag-theme-alpine"
 						rowModelType="serverSide"
+						rowHeight="120"
 						:pagination="true"
 						paginationPageSize="15"
 						:columnDefs="columnDefs"
 						:defaultColDef="defaultColDef"
-						:sideBar="sideBar"
 						:rowData="rowData"
 						rowSelection="multiple"
 						@grid-ready="onGridReady"
@@ -32,6 +32,7 @@ import DefaultLayout from '@/Layouts/Default.vue'
 import PageHeader from '@/Components/Header.vue'
 import 'ag-grid-enterprise'
 import { AgGridVue } from 'ag-grid-vue3'
+import imageCellRenderer from '@/Components/Table/imageCellRenderer.vue'
 
 export default {
 	name: 'Library',
@@ -39,6 +40,7 @@ export default {
 		DefaultLayout,
 		PageHeader,
 		AgGridVue,
+		imageCellRenderer,
 	},
 	props: {},
 	setup() {
@@ -121,26 +123,62 @@ export default {
 				{
 					field: 'library',
 					minWidth: 200,
-					filter: 'agTextColumnFilter',
 					checkboxSelection: true,
 				},
-				{ field: 'title' },
-				{ field: 'sub_title', minWidth: 200 },
-				{ field: 'authors', minWidth: 200 },
-				{ field: 'size_on_disk', maxWidth: 130 },
-				{ field: 'rating', maxWidth: 130, filter: false },
-				{ field: 'categories', filter: false },
-				{ field: 'series', filter: false },
-				{ field: 'publisher', filter: false },
-				{ field: 'publish_date', maxWidth: 130 },
-				{ field: 'language', maxWidth: 120 },
-				{ field: 'formats' },
+				{
+					field: 'thumbnail',
+					headerName: 'Image',
+					maxWidth: 120,
+					resizable: false,
+					filter: false,
+					cellRenderer: 'imageCellRenderer',
+				},
+				{
+					field: 'title',
+					minWidth: 200,
+					wrapText: true,
+				},
+				{
+					field: 'sub_title',
+					headerName: 'Subtitle',
+					minWidth: 200,
+					wrapText: true,
+				},
+				{
+					field: 'authors',
+					minWidth: 200,
+					wrapText: true,
+				},
+				{
+					field: 'size_on_disk',
+					headerName: 'Size On Disk',
+					maxWidth: 130,
+				},
+				{
+					field: 'rating',
+					maxWidth: 130,
+				},
+				{
+					field: 'categories',
+					wrapText: true,
+				},
+				{ field: 'series', floatingFilter: true },
+				{ field: 'publisher', floatingFilter: true },
+				{
+					field: 'publish_date',
+					headerName: 'Publish Date',
+					maxWidth: 130,
+				},
+				{ field: 'language', maxWidth: 120, floatingFilter: true },
+				{ field: 'formats', floatingFilter: true },
 			],
 			defaultColDef: {
 				flex: 1,
 				minWidth: 100,
 				filter: true,
 				resizable: true,
+				filter: 'agTextColumnFilter',
+				floatingFilter: true,
 			},
 			sideBar,
 			rowData,

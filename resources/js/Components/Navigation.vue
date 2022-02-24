@@ -33,11 +33,20 @@
 					<div class="ml-4 flex items-center md:ml-6">
 						<button
 							type="button"
-							class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+							class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white relative"
 							@click="showNotofications = true"
 						>
 							<span class="sr-only">View notifications</span>
 							<BellIcon class="h-6 w-6" aria-hidden="true" />
+
+							<span class="flex h-3 w-3 absolute bottom-0 right-0">
+								<span
+									class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+								></span>
+								<span
+									class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+								></span>
+							</span>
 						</button>
 
 						<!-- Profile dropdown -->
@@ -59,7 +68,7 @@
 								leave-to-class="transform opacity-0 scale-95"
 							>
 								<MenuItems
-									class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+									class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
 								>
 									<MenuItem
 										v-for="item in userNavigation"

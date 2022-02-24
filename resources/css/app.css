@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.library .ag-theme-alpine .ag-cell {
+	word-break: keep-all;
+	line-height: normal;
+}
+
+.has-notifications {
+	position: absolute;
+	bottom: 2px;
+	right: 2px;
+	width: 10px;
+	height: 10px;
+	background-color: darkred;
+	border-radius: 50%;
+}
