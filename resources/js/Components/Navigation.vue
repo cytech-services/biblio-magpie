@@ -68,8 +68,33 @@
 								leave-to-class="transform opacity-0 scale-95"
 							>
 								<MenuItems
-									class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+									class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
 								>
+									<SwitchGroup as="div" class="flex items-center px-4 py-2">
+										<SwitchLabel as="span" class="mr-3">
+											<span
+												class="text-sm font-medium text-gray-900 dark:text-white"
+											>
+												Dark Mode
+											</span>
+										</SwitchLabel>
+										<Switch
+											v-model="darkMode"
+											:class="[
+												darkMode ? 'bg-green-700' : 'bg-gray-200',
+												'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none',
+											]"
+										>
+											<span
+												aria-hidden="true"
+												:class="[
+													darkMode ? 'translate-x-5' : 'translate-x-0',
+													'pointer-events-none inline-block h-5 w-5 rounded-full bg-white dark:bg-sc-dark-alt shadow transform ring-0 transition ease-in-out duration-200',
+												]"
+											/>
+										</Switch>
+									</SwitchGroup>
+
 									<MenuItem
 										v-for="item in userNavigation"
 										:key="item.name"
@@ -79,7 +104,7 @@
 											:href="item.href"
 											:class="[
 												active ? 'bg-gray-100' : '',
-												'block px-4 py-2 text-sm text-gray-700',
+												'block px-4 py-2 text-sm text-gray-700 dark:text-white dark:hover:bg-slate-600',
 											]"
 										>
 											{{ item.name }}
@@ -158,7 +183,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import {
 	Disclosure,
 	DisclosureButton,
@@ -167,6 +192,9 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuItems,
+	Switch,
+	SwitchGroup,
+	SwitchLabel,
 } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import Notifications from '@/Components/Panels/Notifications.vue'
@@ -197,6 +225,9 @@ export default {
 		MenuIcon,
 		XIcon,
 		Notifications,
+		Switch,
+		SwitchGroup,
+		SwitchLabel,
 	},
 	props: {
 		title: {
@@ -206,13 +237,43 @@ export default {
 		user: Object,
 	},
 	setup() {
+		var darkMode = ref(false)
 		const showNotofications = ref(false)
+
+		onMounted(() => {
+			if (
+				localStorage.theme === 'dark' ||
+				(!('theme' in localStorage) &&
+					window.matchMedia('(prefers-color-scheme: dark)').matches)
+			) {
+				darkMode.value = true
+			}
+		})
+
+		watch(darkMode, (newValue, oldValue) => {
+			if (newValue) {
+				document.documentElement.classList.add('dark')
+				localStorage.theme = 'dark'
+			} else {
+				document.documentElement.classList.remove('dark')
+				localStorage.theme = 'light'
+			}
+
+			window.dispatchEvent(
+				new CustomEvent('theme-changed', {
+					detail: {
+						theme: localStorage.theme,
+					},
+				})
+			)
+		})
 
 		const closeNotifications = () => {
 			showNotofications.value = false
 		}
 
 		return {
+			darkMode,
 			navigation,
 			userNavigation,
 			showNotofications,

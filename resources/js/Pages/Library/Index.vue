@@ -6,7 +6,10 @@
 			<div class="w-full h-full mx-auto py-6 sm:px-6 lg:px-8">
 				<div class="px-4 py-4 sm:px-0 library">
 					<ag-grid-vue
-						class="w-full h-[70vh] ag-theme-alpine dark:ag-theme-alpine-dark"
+						:class="[
+							isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine',
+							'w-full h-[70vh]',
+						]"
 						rowModelType="serverSide"
 						rowHeight="120"
 						:pagination="true"
@@ -17,6 +20,14 @@
 						rowSelection="multiple"
 						@grid-ready="onGridReady"
 						@row-selected="onRowSelected"
+						@sort-changed="onSortChanged"
+						@column-resized="saveTableState"
+						@column-visible="saveTableState"
+						@column-pivot-changed="saveTableState"
+						@column-row-group-changed="saveTableState"
+						@column-value-changed="saveTableState"
+						@column-moved="saveTableState"
+						@column-pinned="saveTableState"
 					></ag-grid-vue>
 				</div>
 
@@ -27,7 +38,7 @@
 </template>
 
 <script>
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref, watch, computed } from 'vue'
 import DefaultLayout from '@/Layouts/Default.vue'
 import PageHeader from '@/Components/Header.vue'
 import 'ag-grid-enterprise'
@@ -44,13 +55,23 @@ export default {
 	},
 	props: {},
 	setup() {
+		var darkMode = ref(false)
+
 		let rowData = reactive([])
 		let gridApi = ref(null)
 		let gridColumnApi = ref(null)
 		let columnApi = ref(null)
 		let sideBar = ref(null)
 
+		const isDarkMode = computed(() => {
+			return darkMode.value === 'dark'
+		})
+
 		onMounted(() => {
+			window.addEventListener('theme-changed', (event) => {
+				darkMode.value = event.detail.theme
+			})
+
 			sideBar.value = {
 				toolPanels: [
 					{
@@ -90,6 +111,13 @@ export default {
 			columnApi = params.columnApi
 			gridColumnApi = params.columnApi
 
+			// If there is a saved state then apply it
+			if (localStorage.libraryTableState) {
+				gridColumnApi.applyColumnState({
+					state: JSON.parse(localStorage.libraryTableState),
+				})
+			}
+
 			const updateData = (data) => {
 				// setup the fake server with entire dataset
 				var fakeServer = createFakeServer(data)
@@ -102,6 +130,12 @@ export default {
 			fetch('/api/library/fetch_books')
 				.then((resp) => resp.json())
 				.then((data) => updateData(data))
+		}
+
+		// Save column state changes to the local storage for persistance
+		const saveTableState = () => {
+			let state = gridColumnApi.getColumnState()
+			localStorage.libraryTableState = JSON.stringify(state)
 		}
 
 		const getSelectedRows = () => {
@@ -119,6 +153,9 @@ export default {
 		}
 
 		return {
+			darkMode,
+			isDarkMode,
+			saveTableState,
 			columnDefs: [
 				{
 					field: 'library',

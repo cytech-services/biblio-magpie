@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.library .ag-theme-alpine .ag-cell {
+.library .ag-theme-alpine .ag-cell,
+.library .ag-theme-alpine-dark .ag-cell {
 	word-break: keep-all;
 	line-height: normal;
 }
