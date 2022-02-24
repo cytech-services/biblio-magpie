@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-100">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,7 @@
             <script type="module" src="http://localhost:3030/resources/js/app.ts"></script>
         @endproduction
     </head>
-    <body class="h-full">
+    <body class="h-full bg-stone-100 bg-stone-100 dark:bg-stone-900 text-stone-800 dark:text-stone-100">
         @inertia
     </body>
 </html>

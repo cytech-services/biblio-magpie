@@ -2,13 +2,14 @@
 	<default-layout :title="$options.name">
 		<page-header :title="$options.name" />
 
-		<main class="min-h-full">
-			<div class="w-full h-full mx-auto py-6 sm:px-6 lg:px-8">
-				<div class="px-4 py-4 sm:px-0 library">
+		<button @click="getSelectedRows()">Get Selected Rows</button>
+		<main class="min-h-full flex flex-col xl:flex-row">
+			<div class="flex-1 xl:basis-auto w-full h-full">
+				<div class="library">
 					<ag-grid-vue
 						:class="[
 							isDarkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine',
-							'w-full h-[70vh]',
+							'w-full library-table xl:library-table-full',
 						]"
 						rowModelType="serverSide"
 						rowHeight="120"
@@ -30,8 +31,13 @@
 						@column-pinned="saveTableState"
 					></ag-grid-vue>
 				</div>
+			</div>
 
-				<button @click="getSelectedRows()">Get Selected Rows</button>
+			<div
+				v-if="selectedBook.value"
+				class="flex-1 xl:basis-[30rem] px-5 pb-5 library-table xl:library-table-full overflow-y-auto"
+			>
+				<BookPreview :selected-book="selectedBook.value" />
 			</div>
 		</main>
 	</default-layout>
@@ -44,6 +50,7 @@ import PageHeader from '@/Components/Header.vue'
 import 'ag-grid-enterprise'
 import { AgGridVue } from 'ag-grid-vue3'
 import imageCellRenderer from '@/Components/Table/imageCellRenderer.vue'
+import BookPreview from '@/Components/Library/BookPreview.vue'
 
 export default {
 	name: 'Library',
@@ -52,6 +59,7 @@ export default {
 		PageHeader,
 		AgGridVue,
 		imageCellRenderer,
+		BookPreview,
 	},
 	props: {},
 	setup() {
@@ -62,6 +70,8 @@ export default {
 		let gridColumnApi = ref(null)
 		let columnApi = ref(null)
 		let sideBar = ref(null)
+
+		let selectedBook = reactive({})
 
 		const isDarkMode = computed(() => {
 			return darkMode.value === 'dark'
@@ -148,19 +158,20 @@ export default {
 		}
 
 		const onRowSelected = (event) => {
-			if (event.node.isSelected())
-				console.log('row ' + event.node.data.title, event.node.data)
+			if (event.node.isSelected()) {
+				selectedBook.value = event.node.data
+			}
 		}
 
 		return {
 			darkMode,
 			isDarkMode,
 			saveTableState,
+			selectedBook,
 			columnDefs: [
 				{
 					field: 'library',
-					minWidth: 200,
-					checkboxSelection: true,
+					maxWidth: 130,
 				},
 				{
 					field: 'thumbnail',

@@ -34,7 +34,7 @@
 						<button
 							type="button"
 							class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none relative"
-							@click="showNotofications = true"
+							@click="showTasksAndNotifications = true"
 						>
 							<span class="sr-only">View notifications</span>
 							<BellIcon class="h-6 w-6" aria-hidden="true" />
@@ -158,7 +158,7 @@
 					<button
 						type="button"
 						class="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-						@click="showNotofications = true"
+						@click="showTasksAndNotifications = true"
 					>
 						<span class="sr-only">View notifications</span>
 						<BellIcon class="h-6 w-6" aria-hidden="true" />
@@ -179,7 +179,10 @@
 		</DisclosurePanel>
 	</Disclosure>
 
-	<notifications :open="showNotofications" @close-notifications="closeNotifications" />
+	<TasksAndNotifications
+		:open="showTasksAndNotifications"
+		@close-notifications="closeTasksAndNotifications"
+	/>
 </template>
 
 <script>
@@ -197,7 +200,7 @@ import {
 	SwitchLabel,
 } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-import Notifications from '@/Components/Panels/Notifications.vue'
+import TasksAndNotifications from '@/Components/Panels/TasksAndNotifications.vue'
 
 const navigation = [
 	{ name: 'Library', href: '#', current: true },
@@ -224,7 +227,7 @@ export default {
 		BellIcon,
 		MenuIcon,
 		XIcon,
-		Notifications,
+		TasksAndNotifications,
 		Switch,
 		SwitchGroup,
 		SwitchLabel,
@@ -238,7 +241,7 @@ export default {
 	},
 	setup() {
 		var darkMode = ref(false)
-		const showNotofications = ref(false)
+		const showTasksAndNotifications = ref(false)
 
 		onMounted(() => {
 			if (
@@ -268,16 +271,16 @@ export default {
 			)
 		})
 
-		const closeNotifications = () => {
-			showNotofications.value = false
+		const closeTasksAndNotifications = () => {
+			showTasksAndNotifications.value = false
 		}
 
 		return {
 			darkMode,
 			navigation,
 			userNavigation,
-			showNotofications,
-			closeNotifications,
+			showTasksAndNotifications,
+			closeTasksAndNotifications,
 		}
 	},
 }
