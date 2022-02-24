@@ -32,4 +32,9 @@ class IdentificationType extends Model
     {
         return $this->hasMany(Identification::class);
     }
+
+    public function ScopeOrderPreference($query)
+    {
+        return $query->orderBy('id');
+    }
 }
