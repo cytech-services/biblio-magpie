@@ -27,4 +27,9 @@ class IdentificationType extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+    public function identifications()
+    {
+        return $this->hasMany(Identification::class);
+    }
 }
