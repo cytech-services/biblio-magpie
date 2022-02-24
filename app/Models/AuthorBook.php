@@ -20,6 +20,8 @@ class AuthorBook extends Model
         'book_id',
     ];
 
+    public $timestamps = false;
+
     public function author()
     {
         return $this->belongsTo(Author::class);

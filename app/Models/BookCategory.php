@@ -20,6 +20,8 @@ class BookCategory extends Model
         'genre_id',
     ];
 
+    public $timestamps = false;
+
     public function book()
     {
         return $this->belongsTo(Book::class);
