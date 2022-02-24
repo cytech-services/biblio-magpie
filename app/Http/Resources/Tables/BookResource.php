@@ -21,6 +21,7 @@ class BookResource extends JsonResource
             'library' => $this->library?->name,
             'title' => $this->title,
             'sub_title' => $this->sub_title,
+            'description' => $this->description,
             'authors' => $this->authors ? $this->authors->pluck('name')->implode(', ') : null,
             'size_on_disk' => $this->media ? $this->_sizeOnDisk($this->media) : null,
             'rating' => $this->rating,
@@ -31,7 +32,20 @@ class BookResource extends JsonResource
             'language' => $this->language,
             'formats' => $this->media ? $this->_getFormats($this->media) : null,
             'thumbnail' => $this->images ? $this->_getThumbnail($this->images) : null,
+            'details_image' => $this->images ? $this->_getDetailsImage($this->images) : null,
+            'identifications' => IdentificationResource::collection($this->identifications)
         ];
+    }
+
+    private function _getDetailsImage(Collection $images)
+    {
+        foreach ($images as $key => $image) {
+            if ($image->format === 'small') {
+                return Storage::disk('books')->url($image->path);
+            }
+        }
+
+        return null;
     }
 
     private function _getThumbnail(Collection $images)

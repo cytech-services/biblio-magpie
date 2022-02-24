@@ -27,6 +27,13 @@ class LibraryController extends Controller
                     'series',
                     'publisher',
                     'images',
+                    'identifications' => function ($query) {
+                        $query->with([
+                            'identificationType' => function ($query) {
+                                $query->orderPreference();
+                            }
+                        ]);
+                    }
                 ])
                     ->orderBy('title')
                     ->get()
