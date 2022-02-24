@@ -82,4 +82,9 @@ class Book extends Model
     {
         return $this->belongsTo(Publisher::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

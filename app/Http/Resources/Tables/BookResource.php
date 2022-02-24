@@ -5,6 +5,7 @@ namespace App\Http\Resources\Tables;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BookResource extends JsonResource
 {
@@ -29,7 +30,19 @@ class BookResource extends JsonResource
             'publish_date' => $this->publish_date,
             'language' => $this->language,
             'formats' => $this->media ? $this->_getFormats($this->media) : null,
+            'thumbnail' => $this->images ? $this->_getThumbnail($this->images) : null,
         ];
+    }
+
+    private function _getThumbnail(Collection $images)
+    {
+        foreach ($images as $key => $image) {
+            if ($image->format === 'thumbnail') {
+                return Storage::disk('books')->url($image->path);
+            }
+        }
+
+        return null;
     }
 
     private function _getFormats(Collection $media)
@@ -39,6 +52,8 @@ class BookResource extends JsonResource
             // Log::info('format: ' . print_r($data, true));
             $formats[] = $data->file_format?->name ?? null;
         }
+
+        $formats = array_unique($formats, SORT_STRING);
 
         return implode(', ', $formats);
     }

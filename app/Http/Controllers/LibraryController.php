@@ -26,6 +26,7 @@ class LibraryController extends Controller
                     'categories',
                     'series',
                     'publisher',
+                    'images',
                 ])
                     ->orderBy('title')
                     ->get()
