@@ -17,7 +17,7 @@ class CreateUserablesTable extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('userables', function (Blueprint $table) {
-            $table->foreignIdFor(User::class)->index()->constrained();
+            $table->foreignIdFor(User::class)->constrained();
             $table->text('userable_type')->index();
             $table->unsignedBigInteger('userable_id')->index();
             $table->timestamps();

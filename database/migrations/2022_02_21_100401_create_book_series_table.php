@@ -18,8 +18,8 @@ class CreateBookSeriesTable extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('book_series', function (Blueprint $table) {
-            $table->foreignIdFor(Book::class)->index()->constrained();
-            $table->foreignIdFor(Series::class)->index()->constrained();
+            $table->foreignIdFor(Book::class)->constrained();
+            $table->foreignIdFor(Series::class)->constrained();
             $table->unsignedTinyInteger('order');
 
             $table->unique(['book_id', 'series_id']);

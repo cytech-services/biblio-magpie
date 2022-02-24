@@ -19,8 +19,8 @@ class CreateMediaTable extends Migration
 
         Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Book::class)->index()->constrained();
-            $table->foreignIdFor(FileFormat::class)->index()->constrained();
+            $table->foreignIdFor(Book::class)->constrained();
+            $table->foreignIdFor(FileFormat::class)->constrained();
             $table->text('path');
             $table->unsignedInteger('size');
             $table->softDeletes();

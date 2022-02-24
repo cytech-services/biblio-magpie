@@ -18,8 +18,8 @@ class CreateBookCategoryTable extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('book_category', function (Blueprint $table) {
-            $table->foreignIdFor(Book::class)->index()->constrained();
-            $table->foreignIdFor(Category::class)->index()->constrained();
+            $table->foreignIdFor(Book::class)->constrained();
+            $table->foreignIdFor(Category::class)->constrained();
 
             $table->unique(['book_id', 'category_id']);
         });

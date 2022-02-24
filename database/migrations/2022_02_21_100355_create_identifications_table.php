@@ -19,8 +19,8 @@ class CreateIdentificationsTable extends Migration
 
         Schema::create('identifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Book::class)->index()->constrained();
-            $table->foreignIdFor(IdentificationType::class)->index()->constrained();
+            $table->foreignIdFor(Book::class)->constrained();
+            $table->foreignIdFor(IdentificationType::class)->constrained();
             $table->string('value');
             $table->softDeletes();
             $table->timestamps();

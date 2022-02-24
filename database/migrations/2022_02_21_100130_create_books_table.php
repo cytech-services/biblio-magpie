@@ -20,15 +20,15 @@ class CreateBooksTable extends Migration
 
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Library::class)->index()->constrained();
+            $table->foreignIdFor(Library::class)->constrained();
             $table->string('title');
-            $table->string('sub_title');
+            $table->string('sub_title')->nullable();
             $table->text('description');
-            $table->string('edition');
+            $table->string('edition')->nullable();
             $table->string('language', 2);
-            $table->unsignedInteger('page_count');
-            $table->foreignIdFor(Publisher::class)->index()->constrained();
-            $table->unsignedSmallInteger('rating');
+            $table->unsignedInteger('page_count')->nullable();
+            $table->foreignIdFor(Publisher::class)->constrained();
+            $table->unsignedSmallInteger('rating')->nullable()->default(0);
             $table->date('publish_date');
             $table->softDeletes();
             $table->timestamps();

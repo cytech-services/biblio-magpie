@@ -19,8 +19,8 @@ class CreateReadHistoriesTable extends Migration
 
         Schema::create('read_histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->index()->constrained();
-            $table->foreignIdFor(Book::class)->index()->constrained();
+            $table->foreignIdFor(User::class)->constrained();
+            $table->foreignIdFor(Book::class)->constrained();
             $table->enum('status', ["started", "progress", "finished"]);
             $table->text('progress')->nullable();
             $table->softDeletes();

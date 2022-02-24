@@ -18,8 +18,8 @@ class CreateAuthorBookTable extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('author_book', function (Blueprint $table) {
-            $table->foreignIdFor(Author::class)->index()->constrained();
-            $table->foreignIdFor(Book::class)->index()->constrained();
+            $table->foreignIdFor(Author::class)->constrained();
+            $table->foreignIdFor(Book::class)->constrained();
 
             $table->unique(['author_id', 'book_id']);
         });
