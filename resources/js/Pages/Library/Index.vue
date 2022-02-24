@@ -6,7 +6,7 @@
 			<div class="w-full h-full mx-auto py-6 sm:px-6 lg:px-8">
 				<div class="px-4 py-4 sm:px-0 library">
 					<ag-grid-vue
-						class="w-full h-[70vh] ag-theme-alpine"
+						class="w-full h-[70vh] ag-theme-alpine dark:ag-theme-alpine-dark"
 						rowModelType="serverSide"
 						rowHeight="120"
 						:pagination="true"
