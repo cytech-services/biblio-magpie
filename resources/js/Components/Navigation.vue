@@ -33,7 +33,7 @@
 					<div class="ml-4 flex items-center md:ml-6">
 						<button
 							type="button"
-							class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white relative"
+							class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none relative"
 							@click="showNotofications = true"
 						>
 							<span class="sr-only">View notifications</span>
