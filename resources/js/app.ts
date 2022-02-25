@@ -1,7 +1,4 @@
 import '../css/app.css'
-import 'ag-grid-community/dist/styles/ag-grid.css'
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
-import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css'
 import './bootstrap.ts'
 
 import { App, plugin as inertiaPlugin } from '@inertiajs/inertia-vue3'

@@ -2,22 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.library .ag-theme-alpine .ag-cell,
-.library .ag-theme-alpine-dark .ag-cell {
-	word-break: keep-all;
-	line-height: normal;
-}
-
-.library-table {
-	height: calc(80rem);
-}
-
-@layer utilities {
-	.library-table-full {
-		height: calc(100vh - 8rem);
-	}
-}
-
 .has-notifications {
 	position: absolute;
 	bottom: 2px;
