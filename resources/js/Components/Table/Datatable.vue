@@ -404,6 +404,15 @@ export default {
 				if (row) row.classList.add(...classesToToggle)
 			})
 
+			// Preview the first selectedRow
+			if (selectedRows.length) {
+				let row = props.rowData.data.filter((obj) => {
+					return obj.id === selectedRows[0].id
+				})
+
+				emit('rowSelected', row[0])
+			}
+
 			window.addEventListener('keydown', (event) => {
 				switch (event.key) {
 					case 'Shift':
