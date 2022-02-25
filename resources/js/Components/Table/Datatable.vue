@@ -16,7 +16,7 @@
 				<Menu as="div" class="relative inline-block text-left">
 					<div>
 						<MenuButton
-							class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-none"
+							class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-0"
 							@click="toggleColumnOptions"
 						>
 							Options
@@ -63,10 +63,72 @@
 
 		<div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
 			<div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-				<div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+				<div
+					class="shadow overflow-hidden border-b border-gray-200 dark:border-gray-900 sm:rounded-lg"
+				>
 					<table :class="[name ? name : '', 'min-w-full divide-y divide-gray-200']">
 						<!-- HEADER -->
-						<thead class="bg-gray-50">
+						<thead class="bg-gray-300 dark:bg-gray-800">
+							<tr
+								class="bg-gray-200 dark:bg-gray-700 border-b border-gray-400 dark:border-gray-900"
+							>
+								<td
+									:colspan="columns.length"
+									class="px-4 py-2 text-sm text-gray-500 dark:text-gray-300"
+								>
+									<div class="flex gap-x-5 items-center">
+										<!-- PAGINATION LIMIT -->
+										<select
+											v-model="params.limit"
+											class="flex-shrink block pl-3 pr-10 py-2 text-base dark:text-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-900 focus:outline-none sm:text-sm rounded-md"
+											@change="updatePaginationLimit"
+										>
+											<option value="5">5</option>
+											<option value="10">10</option>
+											<option value="15">15</option>
+											<option value="30">30</option>
+											<option value="50">50</option>
+											<option value="100">100</option>
+										</select>
+
+										<!-- VIEWING -->
+										<div class="flex-1">
+											Viewing records
+											<span class="font-bold">{{ rowData.from }}</span>
+											to
+											<span class="font-bold">{{ rowData.to }}</span>
+											of
+											<span class="font-bold">{{ rowData.total }}</span>
+											records
+										</div>
+
+										<!-- PAGINATION -->
+										<div class="flex-1 flex gap-x-1 justify-end">
+											<div v-for="link in rowData.links" :key="link.label">
+												<Link
+													v-if="link.url"
+													:href="link.url"
+													replace
+													:class="[
+														link.active
+															? 'bg-gray-400 dark:bg-gray-600 text-gray-50 dark:text-gray-300'
+															: '',
+														'text-lg rounded-md py-1 px-2 hover:bg-gray-300 dark:hover:bg-gray-500',
+													]"
+												>
+													<span v-html="link.label" />
+												</Link>
+												<span
+													v-else
+													class="text-gray-300 dark:text-gray-500 text-lg rounded-md py-1 px-2"
+												>
+													<span v-html="link.label" />
+												</span>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
 							<tr>
 								<th
 									v-show="columnDef.visible"
@@ -76,7 +138,7 @@
 									scope="col"
 									:class="[
 										'maxWidth' in columnDef ? columnDef.maxWidth : '',
-										'pl-3 pr-3 pt-4 pb-2 text-left text-xs font-bold text-gray-500 uppercase tracking-wider align-bottom',
+										'pl-3 pr-3 pt-4 pb-2 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider align-bottom whitespace-nowrap',
 									]"
 								>
 									{{ getColumnHeader(columnDef) }}
@@ -98,14 +160,16 @@
 										type="text"
 										:name="columnDef.filter"
 										v-model="params.filter[columnDef.filter]"
-										class="shadow-sm focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md"
+										class="dark:bg-zinc-700 dark:text-zinc-300 shadow-sm focus:outline-none focus:ring-0 block w-full sm:text-sm border-gray-300 dark:border-zinc-900 rounded-md"
 									/>
 								</th>
 							</tr>
 						</thead>
 
 						<!-- BODY -->
-						<tbody class="bg-white align-top divide-y divide-gray-200">
+						<tbody
+							class="bg-white dark:bg-gray-600 align-top divide-y divide-gray-200 dark:divide-gray-400"
+						>
 							<tr
 								v-for="(row, index) in rowData.data"
 								:key="row.id"
@@ -118,7 +182,7 @@
 									:key="columnDef.field"
 									:class="[
 										'maxWidth' in columnDef ? columnDef.maxWidth : '',
-										'px-3 py-2 text-sm text-gray-500',
+										'px-3 py-2 text-sm text-gray-500 dark:text-gray-300',
 									]"
 								>
 									<!-- IMAGE -->
@@ -194,16 +258,18 @@
 
 						<!-- FOOTER -->
 						<tfoot>
-							<tr class="bg-gray-200 shadow-inner">
+							<tr
+								class="bg-gray-200 dark:bg-gray-700 border-t border-gray-400 dark:border-gray-900"
+							>
 								<td
 									:colspan="columns.length"
-									class="px-4 py-2 text-sm text-gray-500"
+									class="px-4 py-2 text-sm text-gray-500 dark:text-gray-300"
 								>
 									<div class="flex gap-x-5 items-center">
 										<!-- PAGINATION LIMIT -->
 										<select
 											v-model="params.limit"
-											class="flex-shrink block pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none sm:text-sm rounded-md"
+											class="flex-shrink block pl-3 pr-10 py-2 text-base dark:text-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-900 focus:outline-none sm:text-sm rounded-md"
 											@change="updatePaginationLimit"
 										>
 											<option value="5">5</option>
@@ -234,16 +300,16 @@
 													replace
 													:class="[
 														link.active
-															? 'bg-gray-400 text-gray-50'
+															? 'bg-gray-400 dark:bg-gray-600 text-gray-50 dark:text-gray-300'
 															: '',
-														'text-lg rounded-md py-1 px-2 hover:bg-gray-300',
+														'text-lg rounded-md py-1 px-2 hover:bg-gray-300 dark:hover:bg-gray-500',
 													]"
 												>
 													<span v-html="link.label" />
 												</Link>
 												<span
 													v-else
-													class="text-gray-300 text-lg rounded-md py-1 px-2"
+													class="text-gray-300 dark:text-gray-500 text-lg rounded-md py-1 px-2"
 												>
 													<span v-html="link.label" />
 												</span>
@@ -290,14 +356,15 @@ export default {
 		XCircleIcon,
 		ChevronDownIcon,
 	},
-	setup(props) {
+	emits: ['rowSelected'],
+	setup(props, { emit }) {
 		console.log(props.rowData)
 		// console.log(props.columnDefs)
 
 		let columnSettingsOpen = ref(false)
 		let keyShift = ref(false)
 		let keyControl = ref(false)
-		let classesToToggle = ['selected', 'bg-gray-100']
+		let classesToToggle = ['selected', 'bg-gray-100', 'dark:bg-neutral-800']
 
 		// Load the selected rows from persistence or default to empty array
 		let selectedRows = reactive(
@@ -420,8 +487,9 @@ export default {
 		}
 
 		// Save column state changes to the local storage for persistance
-		const saveTableState = () => {
+		const updateTableState = () => {
 			localStorage[props.name + '_tableState'] = JSON.stringify(params)
+			Inertia.get(buildUrl(), {}, { replace: true, preserveState: true })
 		}
 
 		const clearFilters = () => {
@@ -434,8 +502,7 @@ export default {
 		}
 
 		const updatePaginationLimit = () => {
-			saveTableState()
-			Inertia.get(buildUrl(), {}, { replace: true, preserveState: true })
+			updateTableState()
 		}
 
 		const buildUrl = () => {
@@ -486,6 +553,8 @@ export default {
 				if (selected) selected.classList.remove(...classesToToggle)
 
 				document.getElementById(row_id).classList.add(...classesToToggle)
+
+				emit('rowSelected', row)
 			} else if (keyShift.value) {
 				let ids = selectedRows
 					.map(function (selectedRow) {
@@ -518,14 +587,11 @@ export default {
 			columnSettingsOpen.value = !columnSettingsOpen.value
 		}
 
-		const hideOnClickOutside = () => {}
-
 		const isVisible = (elem) =>
 			!!elem && !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length)
 
 		watch(params, (newValue, oldValue) => {
-			saveTableState()
-			Inertia.get(buildUrl(), {}, { replace: true, preserveState: true })
+			updateTableState()
 		})
 
 		watch(columns, (newValue, oldValue) => {

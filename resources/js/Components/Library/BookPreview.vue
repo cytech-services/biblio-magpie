@@ -1,7 +1,7 @@
 <template>
-	<div v-if="Object.keys(selectedBook).length" class="book">
+	<div v-if="Object.keys(selectedBook).length" class="book mt-5">
 		<div class="image my-10 xl:mb-3 xl:mt-0">
-			<img class="max-h-96 mx-auto" :src="selectedBook.details_image" />
+			<img class="max-h-60 mx-auto shadow-lg" :src="selectedBook.small_image.url" />
 		</div>
 
 		<div class="bg-white dark:bg-gray-700 shadow overflow-hidden sm:rounded-lg">
@@ -14,7 +14,7 @@
 							'authors',
 							'identifications',
 							'categories',
-							'formats',
+							'media',
 						]"
 						:key="metadata.id"
 						:class="[
@@ -35,7 +35,7 @@
 									v-for="identification in selectedBook[metadata]"
 									:key="identification.identification_type"
 								>
-									{{ identification.identification_type }} -
+									{{ identification.identification_type.name }} -
 									{{ identification.value }}
 								</li>
 							</ul>
@@ -46,30 +46,29 @@
 							class="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-2"
 						>
 							<ul class="flex flex-col gap-1">
-								<li
-									v-for="author in selectedBook[metadata].split(', ')"
-									:key="author"
-								>
+								<li v-for="author in selectedBook[metadata]" :key="author">
 									<a
 										href="#"
-										class="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-500"
+										class="text-indigo-500 hover:text-indigo-600 dark:text-indigo-300 dark:hover:text-indigo-400"
 									>
-										{{ author }}
+										{{ author.name }}
 									</a>
 								</li>
 							</ul>
 						</dd>
 
 						<dd
-							v-else-if="metadata === 'sub_title' && selectedBook[metadata]"
+							v-else-if="metadata === 'media' && selectedBook[metadata]"
 							class="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-2"
 						>
 							<ul class="flex flex-col gap-1">
-								<li
-									v-for="category in selectedBook[metadata].split(', ')"
-									:key="category"
-								>
-									{{ category }}
+								<li v-for="media in selectedBook[metadata]" :key="media.id">
+									<a
+										href="#"
+										class="text-indigo-500 hover:text-indigo-600 dark:text-indigo-300 dark:hover:text-indigo-400"
+									>
+										{{ media.file_format.name }}
+									</a>
 								</li>
 							</ul>
 						</dd>
@@ -79,11 +78,8 @@
 							class="mt-1 text-sm text-gray-900 dark:text-gray-300 sm:mt-0 sm:col-span-2"
 						>
 							<ul class="flex flex-col gap-1">
-								<li
-									v-for="category in selectedBook[metadata].split(', ')"
-									:key="category"
-								>
-									{{ category }}
+								<li v-for="category in selectedBook[metadata]" :key="category">
+									{{ category.name }}
 								</li>
 							</ul>
 						</dd>

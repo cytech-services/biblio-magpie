@@ -6,7 +6,12 @@
 		<main class="min-h-full flex flex-col xl:flex-row">
 			<div class="flex-1 xl:basis-auto w-full h-full">
 				<div class="library m-5">
-					<Datatable name="library" :row-data="books" :column-defs="columnDefs" />
+					<Datatable
+						name="library"
+						:row-data="books"
+						:column-defs="columnDefs"
+						@rowSelected="rowSelected"
+					/>
 				</div>
 			</div>
 
@@ -70,10 +75,9 @@ export default {
 			console.log(`Selected nodes: ${selectedDataStringPresentation}`)
 		}
 
-		const onRowSelected = (event) => {
-			if (event.node.isSelected()) {
-				selectedBook.value = event.node.data
-			}
+		const rowSelected = (row) => {
+			console.log(row)
+			selectedBook.value = row
 		}
 
 		return {
@@ -155,7 +159,7 @@ export default {
 				// },
 			],
 			getSelectedRows,
-			onRowSelected,
+			rowSelected,
 		}
 	},
 }
