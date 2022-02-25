@@ -15,6 +15,8 @@
         @else
             <script type="module" src="http://localhost:3030/resources/js/app.ts"></script>
         @endproduction
+
+        @routes
     </head>
     <body class="h-full bg-stone-100 bg-stone-100 dark:bg-stone-900 text-stone-800 dark:text-stone-100">
         @inertia

@@ -15,7 +15,9 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
-        "ohseesoftware/laravel-vite-manifest": "^1.2"
+        "ohseesoftware/laravel-vite-manifest": "^1.2",
+        "spatie/laravel-query-builder": "^5.0",
+        "tightenco/ziggy": "^1.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
