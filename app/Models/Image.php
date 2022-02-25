@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Image extends Model
 {
@@ -21,6 +22,8 @@ class Image extends Model
         'size',
     ];
 
+    protected $appends = ['url'];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -34,5 +37,10 @@ class Image extends Model
     public function book()
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function getUrlAttribute()
+    {
+        return Storage::disk('books')->url($this->path);
     }
 }

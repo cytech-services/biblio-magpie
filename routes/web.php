@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/library');
 
-Route::controller(LibraryController::class)->group(function () {
-    Route::get('/library', 'index')->name('library.index');
-});
+Route::resource('library', LibraryController::class);
+
+// Route::controller(LibraryController::class)->group(function () {
+//     Route::get('/library', 'index')->name('library.index');
+// });

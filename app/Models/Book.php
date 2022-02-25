@@ -87,4 +87,22 @@ class Book extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+    public function thumbnail_image()
+    {
+        return $this->hasOne(Image::class)->ofMany([
+            'id' => 'max',
+        ], function ($query) {
+            $query->where('format', 'thumbnail');
+        });
+    }
+
+    public function small_image()
+    {
+        return $this->hasOne(Image::class)->ofMany([
+            'id' => 'max',
+        ], function ($query) {
+            $query->where('format', 'small');
+        });
+    }
 }
