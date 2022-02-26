@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, provide, reactive } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 import { Head } from '@inertiajs/inertia-vue3'
 import Navigation from '@/Components/Navigation.vue'
 
@@ -25,6 +26,7 @@ export default {
 	components: {
 		Head,
 		Navigation,
+		Inertia,
 	},
 	props: {
 		title: {
@@ -33,6 +35,10 @@ export default {
 		},
 	},
 	setup(props) {
+		const user = reactive(Inertia.page.props.auth.user)
+		provide('user', user)
+		// console.log('user', user)
+
 		const headTitle = computed(() => {
 			return props.title + ' - Biblio Magpie'
 		})
