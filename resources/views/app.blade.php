@@ -23,7 +23,7 @@
 
         @routes
     </head>
-    <body class="h-full bg-stone-100 bg-stone-100 dark:bg-stone-900 text-stone-800 dark:text-stone-100">
+    <body class="h-full bg-stone-50 dark:bg-stone-900 text-stone-800 dark:text-stone-100">
         @inertia
     </body>
 </html>
