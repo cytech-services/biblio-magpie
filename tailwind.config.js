@@ -1,11 +1,8 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-    darkMode: 'class',
-
     content: [
-        // "./resources/css/**/*.{scss,sass}",
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
@@ -14,17 +11,10 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
         },
     },
 
-    variants: {
-    },
-
-    plugins: [
-        require('@tailwindcss/aspect-ratio'),
-        require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
-    ],
-}
+    plugins: [require('@tailwindcss/forms')],
+};

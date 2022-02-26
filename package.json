@@ -1,54 +1,60 @@
 {
-  "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^2.2.2",
-    "@vue/compiler-sfc": "^3.2.31",
-    "autoprefixer": "^10.4.2",
-    "axios": "^0.25",
-    "dotenv": "^16.0.0",
-    "lodash": "^4.17.19",
-    "postcss": "^8.4.6",
-    "tailwindcss": "^3.0.23",
-    "vite": "^2.8.4",
-    "vue": "^3.2.31"
-  },
-  "dependencies": {
-    "@headlessui/vue": "^1.5.0",
-    "@heroicons/vue": "^1.0.5",
-    "@inertiajs/inertia": "^0.11.0",
-    "@inertiajs/inertia-vue3": "^0.6.0",
-    "@inertiajs/progress": "^0.2.7",
-    "@tailwindcss/aspect-ratio": "^0.4.0",
-    "@tailwindcss/forms": "^0.4.0",
-    "@tailwindcss/typography": "^0.5.2",
-    "@vuedx/typescript-plugin-vue": "^0.7.4",
-    "typescript": "^4.5.5",
-    "vue-class-component": "^8.0.0-rc.1",
-    "vue-toastification": "^2.0.0-rc.5"
-  },
-  "name": "biblio-magpie",
-  "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
-  "version": "0.1.0",
-  "main": ".eslintrc.js",
-  "directories": {
-    "test": "tests"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cytech-services/biblio-magpie.git"
-  },
-  "keywords": [
-    "ebook",
-    "library"
-  ],
-  "author": "Christopher Graham",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/cytech-services/biblio-magpie/issues"
-  },
-  "homepage": "https://github.com/cytech-services/biblio-magpie#readme"
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@inertiajs/inertia": "^0.11.0",
+        "@inertiajs/inertia-vue3": "^0.6.0",
+        "@inertiajs/progress": "^0.2.6",
+        "@tailwindcss/forms": "^0.4.0",
+        "@vitejs/plugin-vue": "^2.2.2",
+        "@vue/compiler-sfc": "^3.2.30",
+        "autoprefixer": "^10.4.2",
+        "axios": "^0.25",
+        "dotenv": "^16.0.0",
+        "lodash": "^4.17.19",
+        "postcss": "^8.4.6",
+        "postcss-import": "^14.0.2",
+        "tailwindcss": "^3.0.18",
+        "vite": "^2.8.4",
+        "vue": "^3.2.30",
+        "vue-loader": "^16.1.2"
+    },
+    "dependencies": {
+        "@headlessui/vue": "^1.5.0",
+        "@heroicons/vue": "^1.0.5",
+        "@inertiajs/inertia": "^0.11.0",
+        "@inertiajs/inertia-vue3": "^0.6.0",
+        "@inertiajs/progress": "^0.2.7",
+        "@tailwindcss/aspect-ratio": "^0.4.0",
+        "@tailwindcss/forms": "^0.4.0",
+        "@tailwindcss/typography": "^0.5.2",
+        "@vuedx/typescript-plugin-vue": "^0.7.4",
+        "typescript": "^4.5.5",
+        "vue-class-component": "^8.0.0-rc.1",
+        "vue-toastification": "^2.0.0-rc.5"
+    },
+    "name": "biblio-magpie",
+    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
+    "version": "0.1.0",
+    "main": ".eslintrc.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cytech-services/biblio-magpie.git"
+    },
+    "keywords": [
+        "ebook",
+        "library"
+    ],
+    "author": "Christopher Graham",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/cytech-services/biblio-magpie/issues"
+    },
+    "homepage": "https://github.com/cytech-services/biblio-magpie#readme"
 }

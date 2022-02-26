@@ -10,10 +10,10 @@
             @php
                 $manifest = json_decode(file_get_contents(public_path('dist/manifest.json')), true);
             @endphp
-            <script type="module" src="/dist/{{ $manifest['resources/js/app.ts']['file'] }}"></script>
-            <link rel="stylesheet" href="/dist/{{ $manifest['resources/js/app.ts']['css'][0] }}">
+            <script type="module" src="/dist/{{ $manifest['resources/js/app.js']['file'] }}"></script>
+            <link rel="stylesheet" href="/dist/{{ $manifest['resources/js/app.js']['css'][0] }}">
         @else
-            <script type="module" src="http://localhost:3030/resources/js/app.ts"></script>
+            <script type="module" src="http://localhost:3030/resources/js/app.js"></script>
         @endproduction
 
         @routes
