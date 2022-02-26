@@ -36,8 +36,12 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => true,
+                'cluster'       => env('PUSHER_APP_CLUSTER'),
+                'host'          => env('WEBSOCKET_BROADCAST_HOST'),
+                'port'          => env('WEBSOCKET_BROADCAST_PORT'),
+                'scheme'        => env('WEBSOCKET_SCHEME'),
+                // 'encrypted'     => env('WEBSOCKET_ENCRYPTED'),
+                // 'useTLS'        => env('WEBSOCKET_USE_TLS'),
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { Head } from '@inertiajs/inertia-vue3'
 import Navigation from '@/Components/Navigation.vue'
 
@@ -35,6 +35,24 @@ export default {
 	setup(props) {
 		const headTitle = computed(() => {
 			return props.title + ' - Biblio Magpie'
+		})
+
+		const processNotification = (e) => {
+			console.log('processNotification', e)
+		}
+
+		const processTask = (e) => {
+			console.log('processTask', e)
+		}
+
+		onMounted(() => {
+			window.Echo.channel('App.Notifications').listen('.notification', processNotification)
+			window.Echo.private('App.Tasks.1').listen('.task', processTask)
+		})
+
+		onUnmounted(() => {
+			window.Echo.leaveChannel('App.Notifications')
+			window.Echo.leaveChannel('App.Tasks.1')
 		})
 
 		return {

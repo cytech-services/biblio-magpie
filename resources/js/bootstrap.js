@@ -18,6 +18,7 @@ window.Echo = new Echo({
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     wsHost: window.location.hostname,
     wsPort: 6001,
+    wssPort: 6001,
     forceTLS: false,
     disableStats: true,
 })

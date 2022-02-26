@@ -86,6 +86,13 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'enable_client_messages' => false,
             'enable_statistics' => true,
+            'options' => [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'encrypted' => true,
+                'host' => '127.0.0.1',
+                'port' => 6001,
+                'scheme' => 'http'
+            ],
         ],
     ],
 
