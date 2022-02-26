@@ -1,9 +1,10 @@
 import '../css/app.css'
-import './bootstrap.ts'
+import './bootstrap.js'
 import 'vue-toastification/dist/index.css'
 
 import { createApp, h } from 'vue'
 
+import Echo from 'laravel-echo';
 import { InertiaProgress } from '@inertiajs/progress'
 import Toast from 'vue-toastification'
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
