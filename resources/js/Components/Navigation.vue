@@ -95,20 +95,28 @@
 										</Switch>
 									</SwitchGroup>
 
-									<MenuItem
-										v-for="item in userNavigation"
-										:key="item.name"
-										v-slot="{ active }"
-									>
-										<a
-											:href="item.href"
+									<MenuItem>
+										<Link
+											:href="route('user.settings', { id: user.id })"
 											:class="[
 												active ? 'bg-gray-100' : '',
 												'block px-4 py-2 text-sm text-gray-700 dark:text-white dark:hover:bg-slate-600',
 											]"
 										>
-											{{ item.name }}
-										</a>
+											Settings
+										</Link>
+									</MenuItem>
+									<MenuItem>
+										<Link
+											:href="route('logout')"
+											method="post"
+											:class="[
+												active ? 'bg-gray-100' : '',
+												'block px-4 py-2 text-sm text-gray-700 dark:text-white dark:hover:bg-slate-600',
+											]"
+										>
+											Sign out
+										</Link>
 									</MenuItem>
 								</MenuItems>
 							</transition>
@@ -166,13 +174,19 @@
 				</div>
 				<div class="mt-3 px-2 space-y-1">
 					<DisclosureButton
-						v-for="item in userNavigation"
-						:key="item.name"
 						as="a"
-						:href="item.href"
+						:href="route('user.settings', { id: user.id })"
 						class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
 					>
-						{{ item.name }}
+						Settings
+					</DisclosureButton>
+
+					<DisclosureButton
+						as="a"
+						:href="route('logout')"
+						class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+					>
+						Sign out
 					</DisclosureButton>
 				</div>
 			</div>
@@ -186,7 +200,8 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
+import { onMounted, ref, watch, inject } from 'vue'
 import {
 	Disclosure,
 	DisclosureButton,
@@ -201,19 +216,6 @@ import {
 } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import TasksAndNotifications from '@/Components/Panels/TasksAndNotifications.vue'
-
-const navigation = [
-	{ name: 'Library', href: '#', current: true },
-	{ name: 'Authors', href: '#', current: false },
-	{ name: 'Series', href: '#', current: false },
-	{ name: 'Settings', href: '#', current: false },
-	{ name: 'Share', href: '#', current: false },
-]
-const userNavigation = [
-	{ name: 'Your Profile', href: '#' },
-	{ name: 'Settings', href: '#' },
-	{ name: 'Sign out', href: '#' },
-]
 
 export default {
 	components: {
@@ -231,6 +233,7 @@ export default {
 		Switch,
 		SwitchGroup,
 		SwitchLabel,
+		Link,
 	},
 	props: {
 		title: {
@@ -241,7 +244,22 @@ export default {
 	},
 	setup() {
 		var darkMode = ref(false)
+
+		const user = inject('user')
+		// console.log('user', user)
 		const showTasksAndNotifications = ref(false)
+
+		const navigation = [
+			{
+				name: 'Library',
+				href: route('library.index'),
+				current: route().current() === 'library.index',
+			},
+			{ name: 'Authors', href: '#', current: false },
+			{ name: 'Series', href: '#', current: false },
+			{ name: 'Settings', href: '#', current: false },
+			{ name: 'Share', href: '#', current: false },
+		]
 
 		onMounted(() => {
 			if (
@@ -276,9 +294,9 @@ export default {
 		}
 
 		return {
+			user,
 			darkMode,
 			navigation,
-			userNavigation,
 			showTasksAndNotifications,
 			closeTasksAndNotifications,
 		}
