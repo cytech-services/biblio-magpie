@@ -1,6 +1,6 @@
 <template>
-	<default-layout :title="$options.name">
-		<page-header :title="$options.name" />
+	<DefaultLayout :title="$options.name">
+		<PageHeader :title="$options.name" />
 
 		<!-- <button @click="getSelectedRows()">Get Selected Rows</button> -->
 		<main class="min-h-full flex flex-col xl:flex-row">
@@ -22,7 +22,7 @@
 				<BookPreview :selected-book="selectedBook.value" />
 			</div>
 		</main>
-	</default-layout>
+	</DefaultLayout>
 </template>
 
 <script>
@@ -59,6 +59,8 @@ export default {
 		const isDarkMode = computed(() => {
 			return darkMode.value === 'dark'
 		})
+
+		// console.log(Inertia.page.props.auth.user)
 
 		onMounted(() => {
 			window.addEventListener('theme-changed', (event) => {
