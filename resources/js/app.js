@@ -3,10 +3,10 @@ import './bootstrap.js'
 import 'vue-toastification/dist/index.css'
 
 import { plugin as FormkitPlugin, defaultConfig } from '@formkit/vue'
+import Toast, { POSITION } from 'vue-toastification'
 import { createApp, h } from 'vue'
 
 import { InertiaProgress } from '@inertiajs/progress'
-import Toast from 'vue-toastification'
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
 import { useToast } from 'vue-toastification'
 
@@ -21,7 +21,6 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async (name) => {
         if (import.meta.env.DEV) {
-            // console.log(import.meta.env)
             return (await import(`./Pages/${name}.vue`)).default
         } else {
             let pages = asyncViews()
@@ -31,33 +30,35 @@ createInertiaApp({
     },
     setup({ el, app, props, plugin }) {
         const myApp = createApp({ render: () => h(app, props) })
-            .use(Toast)
+            .use(Toast, {
+                // Setting the global default position
+                position: POSITION.TOP_CENTER
+            })
             .use(plugin)
             .use(FormkitPlugin, defaultConfig({
                 config: {
                     rootClasses(sectionKey, node) {
-                        // this is an incomplete theme for demonstration purposes
                         const type = node.props.type
-                        // create a classConfig object that contains either strings or functions
-                        // that return strings. We'll loop over the output later to create our
-                        // class objects of keys with boolean values.
+
                         const classConfig = {
-                            outer: 'mb-5', // string values apply to everything
+                            outer: 'mb-5',
                             legend: 'block mb-1 font-bold',
-                            label() { // functions that return strings allow you to diff on types
-                                if (type === 'text') { return 'block mb-1 font-bold' }
+                            label() {
+                                if (type === 'text' || type === 'email' || type === 'password') { return 'block text-sm font-medium text-gray-700' }
                                 if (type === 'radio') { return 'text-sm text-gray-600 mt-0.5' }
                             },
                             options() {
                                 if (type === 'radio') { return 'flex flex-col flex-grow mt-2' }
                             },
                             input() {
-                                if (type === 'text') { return 'w-full h-10 px-3 mb-2 text-base text-gray-700 placeholder-gray-400 border rounded-lg focus:shadow-outline' }
+                                if (type === 'text' || type === 'email' || type === 'password') { return 'mt-1 mb-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md' }
                                 if (type === 'radio') { return 'mr-2' }
+                                if (type === 'submit') { return 'inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500' }
                             },
                             wrapper() {
                                 if (type === 'radio') { return 'flex flex-row flex-grow' }
                             },
+                            messages: 'text-red-500',
                             help: 'text-xs text-gray-500'
                         }
 
@@ -96,40 +97,3 @@ createInertiaApp({
 })
 
 InertiaProgress.init({ color: '#4B5563' })
-
-// import { App, plugin as inertiaPlugin } from '@inertiajs/inertia-vue3'
-// import Toast, { POSITION } from 'vue-toastification'
-// import { createApp, h } from 'vue'
-
-// import { InertiaProgress } from '@inertiajs/progress'
-
-// const el = document.getElementById('app')!
-
-// let asyncViews = () => {
-// 	return import.meta.glob('./Pages/**/*.vue')
-// }
-
-// createApp({
-// 	render: () =>
-// 		h(App, {
-// 			initialPage: JSON.parse(el.dataset.page!),
-// 			resolveComponent: async (name: string) => {
-// 				if (import.meta.env.DEV) {
-// 					// console.log(import.meta.env)
-// 					return (await import(`./Pages/${name}.vue`)).default
-// 				} else {
-// 					let pages = asyncViews()
-// 					const importPage = pages[`./Pages/${name}.vue`]
-// 					return importPage().then((module) => module.default)
-// 				}
-// 			},
-// 		}),
-// })
-// 	.use(inertiaPlugin)
-// 	.use(Toast, {
-// 		position: POSITION.TOP_CENTER,
-// 	})
-// 	.use(route)
-// 	.mount(el)
-
-// InertiaProgress.init({ color: '#4B5563' })
