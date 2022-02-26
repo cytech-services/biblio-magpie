@@ -41,7 +41,7 @@ const submit = () => {
 				<BreezeInput
 					id="email"
 					type="email"
-					class="mt-1 block w-full"
+					class="mt-1 border-0 dark:bg-zinc-800 block w-full text-gray-600 dark:text-gray-300"
 					v-model="form.email"
 					required
 					autofocus
@@ -54,7 +54,7 @@ const submit = () => {
 				<BreezeInput
 					id="password"
 					type="password"
-					class="mt-1 block w-full"
+					class="mt-1 border-0 dark:bg-zinc-800 block w-full text-gray-600 dark:text-gray-300"
 					v-model="form.password"
 					required
 					autocomplete="current-password"
@@ -64,23 +64,24 @@ const submit = () => {
 			<div class="block mt-4">
 				<label class="flex items-center">
 					<BreezeCheckbox name="remember" v-model:checked="form.remember" />
-					<span class="ml-2 text-sm text-gray-600">Remember me</span>
+					<span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Remember me</span>
 				</label>
 			</div>
 
 			<div class="flex items-center justify-end mt-4">
-				<!-- <Link
+				<Link
 					v-if="canResetPassword"
 					:href="route('password.request')"
 					class="underline text-sm text-gray-600 hover:text-gray-900"
 				>
 					Forgot your password?
-				</Link> -->
+				</Link>
 
 				<BreezeButton
 					class="ml-4"
 					:class="{ 'opacity-25': form.processing }"
 					:disabled="form.processing"
+					:loading="form.processing"
 				>
 					Log in
 				</BreezeButton>
