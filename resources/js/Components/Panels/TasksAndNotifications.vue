@@ -1,10 +1,21 @@
 <template>
 	<TransitionRoot as="template" :show="open">
-		<Dialog as="div" class="fixed inset-0 overflow-hidden">
+		<Dialog as="div" class="fixed inset-0 overflow-hidden" @close="open = false">
 			<div class="absolute inset-0 overflow-hidden">
-				<DialogOverlay class="absolute inset-0" />
-
-				<div class="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16">
+				<TransitionChild
+					as="template"
+					enter="ease-in-out duration-500"
+					enter-from="opacity-0"
+					enter-to="opacity-100"
+					leave="ease-in-out duration-500"
+					leave-from="opacity-100"
+					leave-to="opacity-0"
+				>
+					<DialogOverlay
+						class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+					/>
+				</TransitionChild>
+				<div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
 					<TransitionChild
 						as="template"
 						enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -14,55 +25,73 @@
 						leave-from="translate-x-0"
 						leave-to="translate-x-full"
 					>
-						<div class="w-screen max-w-md">
-							<div class="p-6 bg-white dark:bg-stone-800">
-								<div class="flex items-start justify-between">
-									<DialogTitle
-										class="text-lg font-medium text-gray-900 dark:text-gray-100"
-									>
-										<!-- Team -->
-									</DialogTitle>
-									<div class="ml-3 h-7 flex items-center">
-										<button
-											type="button"
-											class="bg-white dark:bg-stone-800 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
-											@click="$emit('closeNotifications')"
-										>
-											<span class="sr-only">Close panel</span>
-											<XIcon class="h-6 w-6" aria-hidden="true" />
-										</button>
-									</div>
-								</div>
-							</div>
-							<div
-								class="h-full flex flex-col gap-10 p-2 bg-white dark:bg-stone-800 shadow-xl overflow-y-scroll"
+						<div class="pointer-events-auto relative w-[30rem]">
+							<TransitionChild
+								as="template"
+								enter="ease-in-out duration-500"
+								enter-from="opacity-0"
+								enter-to="opacity-100"
+								leave="ease-in-out duration-500"
+								leave-from="opacity-100"
+								leave-to="opacity-0"
 							>
-								<div>
-									<div class="mb-3 border-b border-gray-300 dark:border-gray-500">
-										<h1 class="px-3 pb-3 text-xl font-bold dark:text-gray-300">
-											Tasks
-										</h1>
-									</div>
-									<ul role="list" class="flex-1 flex flex-col gap-y-1">
-										<li v-for="task in tasks" :key="task.id">
-											<Task :task="task" />
-										</li>
-									</ul>
+								<div
+									class="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 sm:-ml-10 sm:pr-4"
+								>
+									<button
+										type="button"
+										class="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+										@click="$emit('closeNotifications')"
+									>
+										<span class="sr-only">Close panel</span>
+										<XIcon class="h-6 w-6" aria-hidden="true" />
+									</button>
 								</div>
-								<div class="mt-2">
-									<div class="mb-3 border-b border-gray-300 dark:border-gray-500">
-										<h1 class="px-3 pb-3 text-xl font-bold dark:text-gray-300">
-											Notifications
-										</h1>
-									</div>
-									<ul role="list" class="flex-1 flex flex-col gap-y-1">
-										<li
-											v-for="notification in notifications"
-											:key="notification.id"
+							</TransitionChild>
+							<div class="h-full overflow-y-auto bg-white p-6">
+								<div class="space-y-6 pb-16">
+									<div>
+										<div
+											class="mb-3 border-b border-gray-300 dark:border-gray-500"
 										>
-											<Notification :notification="notification" />
-										</li>
-									</ul>
+											<h1
+												class="px-3 pb-3 text-xl font-bold dark:text-gray-300"
+											>
+												Tasks
+											</h1>
+										</div>
+										<ul role="list" class="flex-1 flex flex-col gap-y-1">
+											<li v-for="task in tasks" :key="task.id">
+												<Task :task="task" />
+											</li>
+										</ul>
+									</div>
+									<div class="my-2">
+										<div
+											class="flex justify-between mb-3 border-b border-gray-300 dark:border-gray-500"
+										>
+											<h1
+												class="px-3 pb-3 text-xl font-bold dark:text-gray-300"
+											>
+												Notifications
+											</h1>
+											<NotificationsMenu
+												@remove-all-notifications="removeAllNotifications"
+											/>
+										</div>
+										<ul role="list" class="flex-1 flex flex-col gap-y-1">
+											<li
+												v-for="notification in notifications"
+												:key="notification.id"
+											>
+												<component
+													:is="notification.component"
+													:notification="notification"
+													@close-notification="closeNotification"
+												/>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -74,7 +103,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import {
 	Dialog,
 	DialogOverlay,
@@ -82,44 +111,11 @@ import {
 	TransitionChild,
 	TransitionRoot,
 } from '@headlessui/vue'
-import { XIcon } from '@heroicons/vue/outline'
+import { XIcon, DotsVerticalIcon } from '@heroicons/vue/outline'
 import Task from '@/Components/Panels/Components/Task.vue'
-import Notification from '@/Components/Panels/Components/Notification.vue'
-
-const tabs = [
-	{ name: 'Tasks', href: '#', current: true },
-	{ name: 'Notifications', href: '#', current: false },
-]
-
-const tasks = [
-	{
-		id: 1,
-		name: 'Importing Books',
-		progress: 0,
-		status: 'parsing book XXXX',
-	},
-]
-
-const notifications = [
-	{
-		id: 1,
-		name: 'Importing Complete',
-		description: 'Successfully imported X books',
-		type: 'success',
-	},
-	{
-		id: 2,
-		name: 'Importing Complete',
-		description: 'Successfully imported X books',
-		type: 'success',
-	},
-	{
-		id: 3,
-		name: 'Importing Complete',
-		description: 'Successfully imported X books',
-		type: 'success',
-	},
-]
+import Notification from '@/Components/Panels/Components/Notifications/Notification.vue'
+import UserUpdated from '@/Components/Panels/Components/Notifications/UserUpdated.vue'
+import NotificationsMenu from '@/Components/Panels/Components/NotificationsMenu.vue'
 
 export default {
 	components: {
@@ -129,8 +125,11 @@ export default {
 		TransitionChild,
 		TransitionRoot,
 		XIcon,
+		DotsVerticalIcon,
 		Task,
 		Notification,
+		UserUpdated,
+		NotificationsMenu,
 	},
 	props: {
 		open: {
@@ -138,11 +137,71 @@ export default {
 			default: false,
 		},
 	},
-	setup() {
+	emits: ['hasNotifications'],
+	setup(props, ctx) {
+		const tasks = [
+			{
+				id: 1,
+				name: 'Importing Books',
+				progress: 0,
+				status: 'parsing book XXXX',
+			},
+		]
+
+		const notifications = reactive([])
+
+		const addUserUpdatedNotification = (data) => {
+			let notification = {
+				id: data.id,
+				component: 'UserUpdated',
+				name: 'User Updated',
+				description: data.name + ' updated their settings',
+				type: 'success',
+			}
+
+			notifications.push(notification)
+			ctx.emit('hasNotifications')
+
+			console.log('addUserUpdatedNotification', notification)
+		}
+		const processNotification = (e) => {
+			console.log('processNotification', e)
+		}
+
+		const processTask = (e) => {
+			console.log('processTask', e)
+		}
+
+		onMounted(() => {
+			window.Echo.private('App.Notifications')
+				.listen('.notification', processNotification)
+				.listen('.userUpdated', addUserUpdatedNotification)
+			// window.Echo.private('App.Tasks').listen('.task', processTask)
+		})
+
+		onUnmounted(() => {
+			window.Echo.leaveChannel('App.Notifications')
+			// window.Echo.leaveChannel('App.Tasks')
+		})
+
+		const closeNotification = (id) => {
+			let index = notifications.findIndex((x) => x.id === id)
+			console.log(notifications, id, index)
+
+			if (index > -1) notifications.splice(index, 1)
+
+			console.log(notifications)
+		}
+
+		const removeAllNotifications = () => {
+			notifications.length = 0
+		}
+
 		return {
-			tabs,
 			tasks,
 			notifications,
+			closeNotification,
+			removeAllNotifications,
 		}
 	},
 }

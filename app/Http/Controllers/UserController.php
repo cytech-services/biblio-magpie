@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserUpdated;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -73,8 +74,14 @@ class UserController extends Controller
     public function update(UpdateRequest $request, User $user)
     {
         $user->fill($request->validated());
-        $user->password = Hash::make($request->input('password'));
+
+        // Update user password if it exists
+        if ($request->exists('password'))
+            $user->password = Hash::make($request->input('password'));
+
         $user->save();
+
+        UserUpdated::dispatch($user);
 
         return Inertia::render('User/Settings');
     }

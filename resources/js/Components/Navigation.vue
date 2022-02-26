@@ -34,12 +34,15 @@
 						<button
 							type="button"
 							class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none relative"
-							@click="showTasksAndNotifications = true"
+							@click="openTasksAndNotifications"
 						>
 							<span class="sr-only">View notifications</span>
 							<BellIcon class="h-6 w-6" aria-hidden="true" />
 
-							<span class="flex h-3 w-3 absolute bottom-0 right-0">
+							<span
+								v-show="hasNotifications"
+								class="flex h-3 w-3 absolute bottom-0 right-0"
+							>
 								<span
 									class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
 								></span>
@@ -56,7 +59,8 @@
 									class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
 								>
 									<span class="sr-only">Open user menu</span>
-									<img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
+									<!-- <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" /> -->
+									<UserCircleIcon class="block h-10 w-10" />
 								</MenuButton>
 							</div>
 							<transition
@@ -126,11 +130,23 @@
 				<div class="-mr-2 flex md:hidden">
 					<!-- Mobile menu button -->
 					<DisclosureButton
-						class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+						class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white relative"
 					>
 						<span class="sr-only">Open main menu</span>
 						<MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
 						<XIcon v-else class="block h-6 w-6" aria-hidden="true" />
+
+						<span
+							v-show="!open && hasNotifications"
+							class="flex h-3 w-3 absolute bottom-1 right-1"
+						>
+							<span
+								class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+							></span>
+							<span
+								class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+							></span>
+						</span>
 					</DisclosureButton>
 				</div>
 			</div>
@@ -157,7 +173,8 @@
 			<div class="pt-4 pb-3 border-t border-gray-700">
 				<div class="flex items-center px-5">
 					<div class="flex-shrink-0">
-						<img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
+						<!-- <img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" /> -->
+						<UserCircleIcon class="block h-10 w-10 text-gray-200" />
 					</div>
 					<div class="ml-3">
 						<div class="text-base font-medium text-white">{{ user.name }}</div>
@@ -165,11 +182,23 @@
 					</div>
 					<button
 						type="button"
-						class="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+						class="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white relative"
 						@click="showTasksAndNotifications = true"
 					>
 						<span class="sr-only">View notifications</span>
 						<BellIcon class="h-6 w-6" aria-hidden="true" />
+
+						<span
+							v-show="hasNotifications"
+							class="flex h-3 w-3 absolute bottom-0 right-0"
+						>
+							<span
+								class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"
+							></span>
+							<span
+								class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"
+							></span>
+						</span>
 					</button>
 				</div>
 				<div class="mt-3 px-2 space-y-1">
@@ -196,6 +225,7 @@
 	<TasksAndNotifications
 		:open="showTasksAndNotifications"
 		@close-notifications="closeTasksAndNotifications"
+		@has-notifications="hasNotifications = true"
 	/>
 </template>
 
@@ -214,7 +244,7 @@ import {
 	SwitchGroup,
 	SwitchLabel,
 } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
+import { BellIcon, MenuIcon, XIcon, UserCircleIcon } from '@heroicons/vue/outline'
 import TasksAndNotifications from '@/Components/Panels/TasksAndNotifications.vue'
 
 export default {
@@ -229,6 +259,7 @@ export default {
 		BellIcon,
 		MenuIcon,
 		XIcon,
+		UserCircleIcon,
 		TasksAndNotifications,
 		Switch,
 		SwitchGroup,
@@ -248,6 +279,7 @@ export default {
 		const user = inject('user')
 		// console.log('user', user)
 		const showTasksAndNotifications = ref(false)
+		const hasNotifications = ref(false)
 
 		const navigation = [
 			{
@@ -289,8 +321,14 @@ export default {
 			)
 		})
 
+		const openTasksAndNotifications = () => {
+			showTasksAndNotifications.value = true
+			hasNotifications.value = false
+		}
+
 		const closeTasksAndNotifications = () => {
 			showTasksAndNotifications.value = false
+			hasNotifications.value = false
 		}
 
 		return {
@@ -298,6 +336,8 @@ export default {
 			darkMode,
 			navigation,
 			showTasksAndNotifications,
+			hasNotifications,
+			openTasksAndNotifications,
 			closeTasksAndNotifications,
 		}
 	},

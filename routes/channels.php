@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Notifications.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('App.Notifications', function ($user) {
+    return true;
 });
 
-Broadcast::channel('App.Tasks.{id}', function ($user, $id) {
+Broadcast::channel('App.Tasks', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });

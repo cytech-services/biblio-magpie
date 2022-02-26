@@ -43,24 +43,6 @@ export default {
 			return props.title + ' - Biblio Magpie'
 		})
 
-		const processNotification = (e) => {
-			console.log('processNotification', e)
-		}
-
-		const processTask = (e) => {
-			console.log('processTask', e)
-		}
-
-		onMounted(() => {
-			window.Echo.channel('App.Notifications').listen('.notification', processNotification)
-			window.Echo.private('App.Tasks.1').listen('.task', processTask)
-		})
-
-		onUnmounted(() => {
-			window.Echo.leaveChannel('App.Notifications')
-			window.Echo.leaveChannel('App.Tasks.1')
-		})
-
 		return {
 			user,
 			headTitle,

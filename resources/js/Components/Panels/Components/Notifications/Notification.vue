@@ -12,7 +12,7 @@
 			>
 				<div
 					v-if="show"
-					class="w-full group-hover:bg-gray-50 dark:group-hover:bg-gray-800 shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5 dark:ring-opacity-20 overflow-hidden"
+					class="w-full group-hover:bg-gray-50 dark:group-hover:bg-gray-800 shadow-md pointer-events-auto ring-1 ring-black ring-opacity-5 dark:ring-opacity-20 overflow-hidden"
 				>
 					<div class="p-4">
 						<div class="flex items-start">
@@ -76,9 +76,7 @@ export default {
 
 		const closeNotification = () => {
 			show.value = false
-			ctx.emit('closeNotification', {
-				id: props.notification.id,
-			})
+			ctx.emit('closeNotification', props.notification.id)
 		}
 
 		return {
