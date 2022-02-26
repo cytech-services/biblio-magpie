@@ -2,7 +2,7 @@
 	<DefaultLayout :title="$options.name">
 		<PageHeader :title="$options.name" />
 
-		<div class="max-w-7xl mx-auto m-5">
+		<div class="max-w-7xl mx-auto my-5 p-5">
 			<div>
 				<div class="md:grid md:grid-cols-3 md:gap-6">
 					<div class="md:col-span-1">
