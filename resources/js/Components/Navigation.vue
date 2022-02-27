@@ -201,7 +201,7 @@
 						</span>
 					</button>
 				</div>
-				<div class="mt-3 px-2 space-y-1">
+				<div class="mt-5 px-2 space-y-8">
 					<DisclosureButton
 						as="a"
 						:href="route('user.settings', { id: user.id })"
