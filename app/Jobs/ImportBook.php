@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Author;
+use App\Models\AuthorImage;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\FileFormat;
@@ -129,11 +130,14 @@ class ImportBook implements ShouldQueue
                 'ebook' => [],
             ];
             $this->_findISBNs($isbns, $fileContents);
-            dump($isbns);
+
+            Log::debug(print_r($isbns, true));
 
             $this->_fetchGoogleMetadata($toProcess, $isbns, $metaData);
 
-            dump($metaData);
+            $this->_fetchAuthorMetadata($toProcess, $isbns, $metaData);
+
+            Log::debug(print_r($metaData, true));
 
             $this->_processMetaData($metaData, $toProcess);
 
@@ -193,11 +197,14 @@ class ImportBook implements ShouldQueue
                     $this->_findISBNs($isbns, $fileContents);
                 }
             }
-            dump($isbns);
+
+            Log::debug(print_r($isbns, true));
 
             $this->_fetchGoogleMetadata($toProcess, $isbns, $metaData);
 
-            dump($metaData);
+            $this->_fetchAuthorMetadata($toProcess, $isbns, $metaData);
+
+            Log::debug(print_r($metaData, true));
 
             $this->_processMetaData($metaData, $toProcess);
 
@@ -206,7 +213,7 @@ class ImportBook implements ShouldQueue
         }
     }
 
-    private function _processMetaData(Collection $metaData, array $toProcess)
+    private function _processMetaData(array $metaData, array $toProcess)
     {
         if (isset($metaData['authors']) && count($metaData['authors'])) {
             // Log::error(print_r($metaData['authors'], true));
@@ -226,23 +233,26 @@ class ImportBook implements ShouldQueue
                 $defaultLibrary = $this->_fetchOrCreateDefaultLibrary();
 
                 // Check if the publisher exists and create it if not
-                $publisher = $this->_fetchOrCreatePublisher($metaData['publisher']);
+                if (isset($metaData['publisher']))
+                    $publisher = $this->_fetchOrCreatePublisher($metaData['publisher']);
 
                 // Check if the book exists and create it if not
-                $book = $this->_fetchOrCreateBook($metaData, $defaultLibrary, $publisher);
+                $book = $this->_fetchOrCreateBook($metaData, $defaultLibrary, isset($metaData['publisher']) ? $publisher : null);
 
                 // Check and Attach identifiers to the book
                 $identifiers = $this->_fetchOrCreateIdentifiers($book, $metaData['identifiers']);
 
                 // Check if the authors exist and create it if not
-                $authors = $this->_fetchOrCreateAuthors($metaData['authors']);
+                $author = $this->_fetchOrCreateAuthors($metaData['authors']);
                 // Attach authors to the book
-                $book->authors()->sync($authors->pluck('id'));
+                $book->authors()->sync($author->id);
 
                 // Check if the categories exist and create it if not
-                $categories = $this->_fetchOrCreateCategories($metaData['categories']);
-                // Attach categories to the book
-                $book->categories()->sync($categories->pluck('id'));
+                if (isset($metaData['categories'])) {
+                    $categories = $this->_fetchOrCreateCategories($metaData['categories']);
+                    // Attach categories to the book
+                    $book->categories()->sync($categories->pluck('id'));
+                }
 
                 $path = $this->_getTargetPath($toProcess, $metaData);
 
@@ -257,13 +267,13 @@ class ImportBook implements ShouldQueue
                 Cache::forget('hasDefaultLibrary');
                 Cache::tags('publishers')->flush();
 
-                Log::error('ERROR: ' . $e->getMessage());
+                Log::error('ERROR: ' . $e);
                 dd('done');
             }
         }
     }
 
-    private function _processImages(Book $book, array $path, Collection $metaData)
+    private function _processImages(Book $book, array $path, array $metaData)
     {
         foreach (['thumbnail', 'small', 'medium'] as $key => $imageFormat) {
             if (isset($metaData['images'][$imageFormat])) {
@@ -302,9 +312,9 @@ class ImportBook implements ShouldQueue
         }
     }
 
-    private function _getTargetPath(array $toProcess, Collection $metaData)
+    private function _getTargetPath(array $toProcess, array $metaData)
     {
-        $sanitizedAuthors = filter_filename(implode(' & ', $metaData['authors']));
+        $sanitizedAuthors = filter_filename($metaData['authors']['name']);
         $sanitizedTitle = filter_filename($metaData['title']);
 
         $path = storage_path('app/public/books') . '/' . $sanitizedAuthors . '/' . $sanitizedTitle;
@@ -395,7 +405,7 @@ class ImportBook implements ShouldQueue
         return $identificationType;
     }
 
-    private function _fetchOrCreateBook(Collection $metaData, Library $defaultLibrary, Publisher $publisher)
+    private function _fetchOrCreateBook(array $metaData, Library $defaultLibrary, Publisher|null $publisher)
     {
         foreach ($metaData['identifiers'] as $key => $identifier) {
             $identifier = Identification::whereHas('identificationType', function (Builder $query) use ($identifier) {
@@ -418,8 +428,9 @@ class ImportBook implements ShouldQueue
             'edition' => $metaData['edition'],
             'language' => $metaData['language'],
             'page_count' => $metaData['page_count'],
-            'publisher_id' => $publisher->id,
+            'publisher_id' => $publisher?->id ?? null,
             'publish_date' => $metaData['publish_date'],
+            'has_media' => true,
         ]);
     }
 
@@ -463,31 +474,104 @@ class ImportBook implements ShouldQueue
         return $publisher;
     }
 
-    private function _fetchOrCreateAuthors(array $authorsArray)
+    // $metaData['authors'] = [
+    //     'goodreads_id' => $array['author']['id'],
+    //     'name' => $array['author']['name'],
+    //     'images' => [
+    //         'thumbnail' => $array['author']['small_image_url'],
+    //         'small' => $array['author']['image_url'],
+    //         'medium' => $array['author']['large_image_url']
+    //     ],
+    //     'about' => $array['author']['about'],
+    //     'hometown' => $array['author']['hometown'],
+    //     'born_at' => $array['author']['born_at'],
+    //     'died_at' => $array['author']['died_at'],
+    //     'num_works' => $array['author']['works_count'],
+    // ];
+
+    private function _fetchOrCreateAuthors(array $authorData)
     {
-        $authors = collect();
-        foreach ($authorsArray as $key => $authorString) {
-            $key = 'author_' . md5($authorString);
+        $key = 'author_' . md5($authorData['name']);
 
-            $author = Cache::tags('authors')->remember($key, 300, function () use ($authorString) {
-                return Author::where('name', $authorString)->first();
+        $author = Cache::tags('authors')->remember($key, 300, function () use ($authorData) {
+            return Author::where('name', $authorData['name'])->first();
+        });
+
+        Log::info('NO AUTHOR');
+
+        if (!$author) {
+            DB::transaction(function () use (&$author, $authorData, $key) {
+                Log::info(print_r([
+                    'name' => $authorData['name'],
+                    'goodreads_id' => $authorData['goodreads_id'],
+                    'about' => $authorData['about'],
+                    'hometown' => $authorData['hometown'],
+                    'born_at' => $authorData['born_at'],
+                    'died_at' => $authorData['died_at'],
+                    'num_works' => $authorData['num_works'],
+                ], true));
+
+                $author = Author::create([
+                    'name' => $authorData['name'],
+                    'goodreads_id' => $authorData['goodreads_id'],
+                    'about' => $authorData['about'],
+                    'hometown' => $authorData['hometown'],
+                    'born_at' => $authorData['born_at'],
+                    'died_at' => $authorData['died_at'],
+                    'num_works' => $authorData['num_works'],
+                ]);
+
+                Log::info('AUTHOR CREATED');
+
+                $sanitizedAuthors = filter_filename($author->name);
+
+                $path = storage_path('app/public/books') . '/' . $sanitizedAuthors;
+
+                Log::error($path);
+                File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
+
+                foreach (['thumbnail', 'small', 'medium'] as $key => $imageFormat) {
+                    if (isset($authorData['images'][$imageFormat])) {
+                        $response = Http::get($authorData['images'][$imageFormat]);
+
+                        if ($response->successful()) {
+                            $mimeType = $response->header('content-type');
+
+                            $ext = false;
+                            if ($mimeType === 'image/jpeg') {
+                                $ext = 'jpg';
+                            } elseif ($mimeType === 'image/png') {
+                                $ext = 'png';
+                            }
+
+                            if (!$ext)
+                                continue;
+
+                            $filename = 'author_' . $imageFormat . '.' . $ext;
+                            $fullPath = $path . '/' . $filename;
+
+                            Log::info("\n");
+                            Log::info($fullPath);
+                            Log::info("\n");
+
+                            File::put($fullPath, $response->body());
+
+                            AuthorImage::create([
+                                'author_id' => $author->id,
+                                'format' => $imageFormat,
+                                'path' => str_replace(storage_path('app/public/books') . '/', '', $fullPath),
+                                'size' => File::size($fullPath),
+                            ]);
+                        }
+                    }
+                }
+
+                Cache::forget($key);
             });
-
-            if (!$author) {
-                DB::transaction(function () use (&$author, $authorString, $key) {
-                    $author = Author::create([
-                        'name' => $authorString
-                    ]);
-
-                    Cache::forget($key);
-                });
-            }
-
-            $authors->push($author);
         }
 
 
-        return $authors;
+        return $author;
     }
 
     private function _fetchOrCreateCategories(array $categoriesArray)
@@ -581,6 +665,163 @@ class ImportBook implements ShouldQueue
         }
     }
 
+    private function _setAuthorMetadata(string $isbn, array $data, array &$metaData)
+    {
+        if (isset($metaData['identifiers'])) {
+            // Set Goodreads identifier for the book
+            $metaData['identifiers'][] = [
+                'type' => 'GOODREADS',
+                'identifier' => $data['search']['results']['work']['id'],
+            ];
+        } else {
+            // If there are no identifiers then start populating them
+            $metaData['identifiers'][] = [
+                'type' => strlen($isbn) === 13 ? 'ISBN_13' : 'ISBN_10',
+                'identifier' => $isbn,
+            ];
+            $metaData['identifiers'][] = [
+                'type' => 'GOODREADS',
+                'identifier' => $data['search']['results']['work']['best_book']['id'],
+            ];
+        }
+
+        // Set title if not set
+        if (!isset($metaData['title'])) {
+            preg_match('/^(.+?)\s\(.*\)$/', $data['search']['results']['work']['best_book']['title'], $matches);
+            $metaData['title'] = isset($matches[1]) ? $matches[1] : $data['search']['results']['work']['best_book']['title'];
+        }
+
+        // Set subtitle if not set
+        if (!isset($metaData['sub_title'])) {
+            $metaData['sub_title'] = null;
+        }
+
+        // Set description if not set
+        if (!isset($metaData['description'])) {
+            $metaData['description'] = null;
+        }
+
+        // Set edition if not set
+        if (!isset($metaData['edition'])) {
+            $metaData['edition'] = null;
+        }
+
+        // Set language if not set
+        if (!isset($metaData['language'])) {
+            $metaData['language'] = 'en';
+        }
+
+        // Set page_count if not set
+        if (!isset($metaData['page_count'])) {
+            $metaData['page_count'] = null;
+        }
+
+        // Set publisher_id if not set
+        if (!isset($metaData['publisher_id'])) {
+            $metaData['publisher_id'] = null;
+        }
+
+        // Set images if not set
+        if (!isset($metaData['images'])) {
+            $metaData['images'] = [
+                'thumbnail' => $data['search']['results']['work']['best_book']['small_image_url'],
+                'small' => $data['search']['results']['work']['best_book']['image_url']
+            ];
+        }
+
+        // Set publication date if not set
+        if (!isset($metaData['publish_date'])) {
+            $metaData['publish_date'] = $data['search']['results']['work']['original_publication_year'] . '-' . $data['search']['results']['work']['original_publication_month'] . '-' . $data['search']['results']['work']['original_publication_day'];
+        }
+
+        // Fetch and set author metadata
+        Log::info('https://www.goodreads.com/author/show.xml?key=ckvsiSDsuqh7omh74ZZ6Q&id=' . $data['search']['results']['work']['best_book']['author']['id']);
+        $response = Http::get('https://www.goodreads.com/author/show.xml?key=ckvsiSDsuqh7omh74ZZ6Q&id=' . $data['search']['results']['work']['best_book']['author']['id']);
+        if ($response->successful()) {
+            $xml = simplexml_load_string($response->body(), null, LIBXML_NOCDATA);
+            $json = json_encode($xml);
+            $array = json_decode($json, TRUE);
+
+            if (isset($array['author'])) {
+                $metaData['authors'] = [
+                    'goodreads_id' => $array['author']['id'],
+                    'name' => $array['author']['name'],
+                    'images' => [
+                        'thumbnail' => $array['author']['small_image_url'],
+                        'small' => $array['author']['image_url'],
+                        'medium' => $array['author']['large_image_url']
+                    ],
+                    'about' => $array['author']['about'] ? $array['author']['about'] : null,
+                    'hometown' => $array['author']['hometown'] ? $array['author']['hometown'] : null,
+                    'born_at' => $array['author']['born_at'] ? Carbon::parse($array['author']['born_at'])->toDateString() : null,
+                    'died_at' => $array['author']['died_at'] ? Carbon::parse($array['author']['died_at'])->toDateString() : null,
+                    'num_works' => $array['author']['works_count'] ? $array['author']['works_count'] : null,
+                ];
+            }
+        }
+    }
+
+    private function _fetchAuthorMetadata(array $toProcess, array $isbns, Collection &$metaData)
+    {
+        if (count($isbns['ebook']) > 0 || count($isbns['book']) > 0) {
+            Notification::send(User::all(), new ImportBooksBatch([
+                'batch_id' => $this->batch()->id,
+                'name' => $this->batch()->name,
+                'status' => $this->toProcess['filename'],
+                'sub_status' => 'Fetching Author metadata',
+                'progress' => $this->batch()->progress(),
+            ]));
+        }
+
+        $metaData = $metaData->toArray();
+
+        if (count($isbns['ebook']) > 0) {
+            foreach ($isbns['ebook'] as $key => $isbn) {
+                Log::info('https://www.goodreads.com/search/index.xml?q=' . $isbn . '&key=ckvsiSDsuqh7omh74ZZ6Q&search[field]=isbn');
+                $response = Http::get('https://www.goodreads.com/search/index.xml?q=' . $isbn . '&key=ckvsiSDsuqh7omh74ZZ6Q&search[field]=isbn');
+
+
+                if ($response->successful()) {
+                    $xml = simplexml_load_string($response->body(), null, LIBXML_NOCDATA);
+                    $json = json_encode($xml);
+                    $array = json_decode($json, TRUE);
+
+                    if (isset($array['search']) && $array['search']['total-results'] > 0) {
+                        Log::info(print_r($array, true));
+
+                        $this->_setAuthorMetadata($isbn, $array, $metaData);
+
+                        break;
+                    }
+                } else {
+                    Log::error($response->body());
+                }
+            }
+        } elseif (count($isbns['book']) > 0) {
+            foreach ($isbns['book'] as $key => $isbn) {
+                Log::info('https://www.goodreads.com/search/index.xml?q=' . $isbn . '&key=ckvsiSDsuqh7omh74ZZ6Q&search[field]=isbn');
+                $response = Http::get('https://www.goodreads.com/search/index.xml?q=' . $isbn . '&key=ckvsiSDsuqh7omh74ZZ6Q');
+
+
+                if ($response->successful()) {
+                    $xml = simplexml_load_string($response->body(), null, LIBXML_NOCDATA);
+                    $json = json_encode($xml);
+                    $array = json_decode($json, TRUE);
+
+                    if (isset($array['search']) && $array['search']['total-results'] > 0) {
+                        Log::info(print_r($array, true));
+
+                        $this->_setAuthorMetadata($isbn, $array, $metaData);
+
+                        break;
+                    }
+                } else {
+                    Log::error($response->body());
+                }
+            }
+        }
+    }
+
     private function _fetchGoogleMetadata(array $toProcess, array $isbns, Collection &$metaData)
     {
         if (count($isbns['ebook']) > 0 || count($isbns['book']) > 0) {
@@ -605,12 +846,6 @@ class ImportBook implements ShouldQueue
                         Log::error($response->body());
                     }
 
-                    // $xml = simplexml_load_string($xml_string);
-
-                    // $json = json_encode($xml);
-
-                    // $array = json_decode($json, TRUE);
-
                     break;
                 } else {
                     Log::error($response->body());
@@ -631,22 +866,12 @@ class ImportBook implements ShouldQueue
                         Log::error($response->body());
                     }
 
-                    // $xml = simplexml_load_string($xml_string);
-
-                    // $json = json_encode($xml);
-
-                    // $array = json_decode($json, TRUE);
-
                     break;
                 } else {
                     Log::error($response->body());
                 }
-
-                // Log::info($response->body());
             }
         }
-
-        //
     }
 
     private function _findISBNs(array &$isbns, string $fileContents, $printLines = false)
