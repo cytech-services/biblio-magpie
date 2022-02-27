@@ -183,7 +183,7 @@
 					<button
 						type="button"
 						class="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white relative"
-						@click="showTasksAndNotifications = true"
+						@click="openTasksAndNotifications"
 					>
 						<span class="sr-only">View notifications</span>
 						<BellIcon class="h-6 w-6" aria-hidden="true" />
@@ -210,13 +210,13 @@
 						Settings
 					</DisclosureButton>
 
-					<DisclosureButton
-						as="a"
+					<Link
 						:href="route('logout')"
+						method="post"
 						class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
 					>
 						Sign out
-					</DisclosureButton>
+					</Link>
 				</div>
 			</div>
 		</DisclosurePanel>
