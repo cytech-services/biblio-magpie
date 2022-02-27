@@ -116,6 +116,7 @@ import Task from '@/Components/Panels/Components/Task.vue'
 import Notification from '@/Components/Panels/Components/Notifications/Notification.vue'
 import UserUpdated from '@/Components/Panels/Components/Notifications/UserUpdated.vue'
 import NotificationsMenu from '@/Components/Panels/Components/NotificationsMenu.vue'
+import { Inertia } from '@inertiajs/inertia'
 
 export default {
 	components: {
@@ -173,9 +174,15 @@ export default {
 		}
 
 		onMounted(() => {
-			window.Echo.private('App.Notifications')
-				.listen('.notification', processNotification)
-				.listen('.userUpdated', addUserUpdatedNotification)
+			window.Echo.private(`App.Models.User.${Inertia.page.props.auth.user.id}`).notification(
+				(notification) => {
+					if (notification.type === 'App\\Notifications\\User\\UserUpdated')
+						addUserUpdatedNotification(notification)
+
+					console.log(notification)
+				}
+			)
+
 			// window.Echo.private('App.Tasks').listen('.task', processTask)
 		})
 

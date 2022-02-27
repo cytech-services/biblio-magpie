@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Events\UserUpdated;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
+use App\Notifications\User\UserUpdated as UserUserUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -82,6 +84,8 @@ class UserController extends Controller
         $user->save();
 
         UserUpdated::dispatch($user);
+
+        Notification::send(User::all(), new UserUserUpdated($user));
 
         return Inertia::render('User/Settings');
     }
