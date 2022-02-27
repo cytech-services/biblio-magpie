@@ -26,6 +26,7 @@ class Book extends Model
         'publisher_id',
         'rating',
         'publish_date',
+        'has_media',
     ];
 
     /**
