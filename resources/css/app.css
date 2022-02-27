@@ -1,0 +1,17 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+.has-notifications {
+	position: absolute;
+	bottom: 2px;
+	right: 2px;
+	width: 10px;
+	height: 10px;
+	background-color: darkred;
+	border-radius: 50%;
+}

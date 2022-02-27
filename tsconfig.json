@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"strict": false,
+		"noImplicitThis": true,
+		"jsx": "preserve",
+		"importHelpers": true,
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"sourceMap": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./resources/js/*"]
+		},
+		"lib": [
+            "esnext",
+            "dom"
+        ],
+        "plugins": [
+            {
+                "name": "@vuedx/typescript-plugin-vue"
+            }
+        ]
+	},
+	"include": [
+        "./resources/js/**/*.js",
+        "./resources/js/**/*.d.ts",
+        "./resources/js/**/*.vue"
+    ],
+	"exclude": ["node_modules"]
+}
