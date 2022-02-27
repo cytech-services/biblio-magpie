@@ -17,6 +17,12 @@ class Author extends Model
      */
     protected $fillable = [
         'name',
+        'goodreads_id',
+        'about',
+        'hometown',
+        'born_at',
+        'died_at',
+        'num_works',
     ];
 
     /**
