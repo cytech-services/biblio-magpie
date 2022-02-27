@@ -50,6 +50,7 @@
 											type="password"
 											name="password"
 											label="New Password"
+											autocomplete="new_password"
 											validation=""
 											validation-visibility="live"
 										/>
@@ -60,6 +61,7 @@
 											type="password"
 											name="password_confirm"
 											label="Confirm password"
+											autocomplete="new_password"
 											validation="confirm"
 											validation-visibility="live"
 											validation-label="Password confirmation"
