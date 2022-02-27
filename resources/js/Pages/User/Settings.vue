@@ -156,6 +156,10 @@ export default {
 				},
 				onError: (errors) => {
 					node.setErrors([], errors)
+
+					if ('auth' in errors) {
+						toast.error(errors.auth)
+					}
 				},
 				onFinish: (visit) => {
 					// console.log('finish', visit)
