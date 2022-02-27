@@ -29,6 +29,7 @@ class CreateBooksTable extends Migration
             $table->unsignedInteger('page_count')->nullable();
             $table->foreignIdFor(Publisher::class)->constrained();
             $table->unsignedSmallInteger('rating')->nullable()->default(0);
+            $table->boolean('has_media')->default(false);
             $table->date('publish_date');
             $table->softDeletes();
             $table->timestamps();
