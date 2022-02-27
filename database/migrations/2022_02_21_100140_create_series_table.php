@@ -18,6 +18,8 @@ class CreateSeriesTable extends Migration
         Schema::create('series', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('goodreads_id')->nullable();
+            $table->integer('num_works')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
