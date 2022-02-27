@@ -1,6 +1,6 @@
 <template>
 	<TransitionRoot as="template" :show="open">
-		<Dialog as="div" class="fixed inset-0 overflow-hidden" @close="open = false">
+		<Dialog as="div" class="fixed inset-0 overflow-hidden" @close="$emit('closeNotifications')">
 			<div class="absolute inset-0 overflow-hidden">
 				<TransitionChild
 					as="template"
@@ -140,15 +140,7 @@ export default {
 	},
 	emits: ['hasNotifications'],
 	setup(props, ctx) {
-		const tasks = [
-			{
-				id: 1,
-				name: 'Importing Books',
-				progress: 0,
-				status: 'parsing book XXXX',
-			},
-		]
-
+		const tasks = reactive([])
 		const notifications = reactive([])
 
 		const addUserUpdatedNotification = (data) => {
@@ -162,15 +154,25 @@ export default {
 
 			notifications.push(notification)
 			ctx.emit('hasNotifications')
-
-			console.log('addUserUpdatedNotification', notification)
-		}
-		const processNotification = (e) => {
-			console.log('processNotification', e)
 		}
 
-		const processTask = (e) => {
-			console.log('processTask', e)
+		const createOrUpdateTaskStatus = (data) => {
+			let index = tasks.findIndex((x) => x.batch_id === data.batch_id)
+			console.log(tasks, data.batch_id, index)
+
+			if (index > -1) {
+				tasks[index] = data
+			} else {
+				tasks.push(data)
+			}
+
+			if (data.progress === 100 && index > -1) {
+				setTimeout(() => {
+					tasks.splice(index, 1)
+				}, 5000)
+			}
+
+			ctx.emit('hasNotifications')
 		}
 
 		onMounted(() => {
@@ -178,12 +180,12 @@ export default {
 				(notification) => {
 					if (notification.type === 'App\\Notifications\\User\\UserUpdated')
 						addUserUpdatedNotification(notification)
+					if (notification.type === 'App\\Notifications\\Library\\ImportBooksBatch')
+						createOrUpdateTaskStatus(notification)
 
 					console.log(notification)
 				}
 			)
-
-			// window.Echo.private('App.Tasks').listen('.task', processTask)
 		})
 
 		onUnmounted(() => {
