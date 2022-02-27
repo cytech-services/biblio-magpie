@@ -23,11 +23,11 @@ class CreateBooksTable extends Migration
             $table->foreignIdFor(Library::class)->constrained();
             $table->string('title');
             $table->string('sub_title')->nullable();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('edition')->nullable();
-            $table->string('language', 2);
+            $table->string('language', 2)->nullable()->default('en');
             $table->unsignedInteger('page_count')->nullable();
-            $table->foreignIdFor(Publisher::class)->constrained();
+            $table->foreignIdFor(Publisher::class)->nullable()->constrained();
             $table->unsignedSmallInteger('rating')->nullable()->default(0);
             $table->boolean('has_media')->default(false);
             $table->date('publish_date');
