@@ -1,7 +1,15 @@
 <template>
 	<div v-if="Object.keys(selectedBook).length" class="book mt-5">
 		<div class="image my-10 xl:mb-3 xl:mt-0">
-			<img class="max-h-60 mx-auto shadow-lg" :src="selectedBook.small_image.url" />
+			<img
+				v-if="selectedBook.small_image"
+				class="max-h-60 mx-auto shadow-lg"
+				:src="selectedBook.small_image.url"
+			/>
+			<div v-else class="text-center">
+				<BookOpenIcon class="h-40 w-40 mx-auto" aria-hidden="true" />
+				<span class="text-lg text-gray-400">No cover image</span>
+			</div>
 		</div>
 
 		<div class="bg-white dark:bg-gray-700 shadow overflow-hidden sm:rounded-lg">
@@ -101,7 +109,10 @@
 
 <script>
 import { watch } from '@vue/runtime-core'
+import { BookOpenIcon } from '@heroicons/vue/outline'
+
 export default {
+	components: { BookOpenIcon },
 	props: {
 		selectedBook: {
 			type: Object,
