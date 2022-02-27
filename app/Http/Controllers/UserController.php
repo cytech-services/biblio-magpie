@@ -75,6 +75,12 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, User $user)
     {
+        if ($request->user()->cannot('update', $user)) {
+            return redirect()->back()->withErrors([
+                'auth' => 'Not allowed to update user'
+            ]);
+        }
+
         $user->fill($request->validated());
 
         // Update user password if it exists
@@ -82,8 +88,6 @@ class UserController extends Controller
             $user->password = Hash::make($request->input('password'));
 
         $user->save();
-
-        UserUpdated::dispatch($user);
 
         Notification::send(User::all(), new UserUserUpdated($user));
 
