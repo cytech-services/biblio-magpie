@@ -205,7 +205,12 @@
 					<DisclosureButton
 						as="a"
 						:href="route('user.settings', { id: user.id })"
-						class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+						:class="[
+							$page.component === 'User/Settings'
+								? 'bg-gray-900 text-white'
+								: 'text-gray-400 hover:text-white hover:bg-gray-700',
+							'block px-3 py-2 rounded-md text-base font-medium',
+						]"
 					>
 						Settings
 					</DisclosureButton>
