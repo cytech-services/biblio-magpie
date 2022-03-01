@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(
 
         Route::controller(UserController::class)->group(function () {
             Route::get('/user/settings/{user}', 'settings')->name('user.settings');
-            Route::put('/user/settings/{user}', 'update')->name('user.settings');
+            Route::put('/user/settings/{user}', 'update')->name('user.settings.update');
         });
     }
 );
